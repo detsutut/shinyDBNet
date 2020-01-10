@@ -10,33 +10,32 @@ You can run the app from [here](https://detsutut.shinyapps.io/shinyDBNet/) or fr
 
 In order to load the network, three files must be uploaded. These files describes the network in terms of its nodes, its edges and the data from which to learn the CPTs.
 Files have to be in \*.csv format and must follow this templates:
-* Nodes
 
-  | id  | label     |
-  | ----| --------- |
-  |  1  | Cloudy    |
-  |  2  | Sprikler  |
-  |  3  | Rain      |
-  |  4  | Wet Grass |
-
-* Edges
+* Edges: the directed connections between the nodes of the network
 
   | from | to  |
   | ---- | --- |
-  | 1    | 2   |
-  | 1    | 3   |
-  | 2    | 4   |
-  | 3    | 4   |
+  | Cloudy    | Sprikler   |
+  | Cloudy    | Rain   |
+  | Sprikler   | Wet Grass   |
+  | Rain    | Wet Grass   |
 
-* Data
+* Data: the entries from which to learn the CPTs
 
   | Cloudy | Sprikler | Rain | Wet Grass |
   | ------ | -------- | ---- | --------- |
   | Yes    | No       | Yes  | Yes       | 
   | No     | No       | No   | No        | 
   | No     | Yes      | No   | Yes       | 
+  
+**IMPORTANT: the names of the Edges entries and the names of the Data columns must coincide.**
+
+You can also play with a pre-trained example by clicking the `Load Example` button
 
 ### Querying the Network
+
+Click on the nodes to see their prior distributions. Here you can also set the evidence for the target node.
+When you're done with the evidence setting, select the node you want to query and use the sidebar panel to perform the query and see how the distribution changes.
 
 ## Development, Testing and Deployment
 
@@ -47,6 +46,7 @@ These instructions will get you a copy of the project up and running on your loc
 * [R](https://www.r-project.org/) - Main Language
 * [SHINY](https://shiny.rstudio.com/) - Used to build the interactive web app straight from R
 * [BNLEARN](https://www.bnlearn.com/) - Main depencency of the project, used to learn and query the bayesian network
+* [VISNETWORK](https://datastorm-open.github.io/visNetwork/) - For network visualization
 * [SHINYAPPS.IO](http://shinyapps.io/) - RStudio servers where the webapp is hosted
 
 ## Authors
