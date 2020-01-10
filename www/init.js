@@ -24,7 +24,7 @@ var tour = new Tour({
         {
             element: '#collapseExample',
             title: 'Load Files',
-            content: 'Welcome to the BNFalls tutorial! Upload your Bayesian Network files here to get started'
+            content: 'Welcome to the shinyDBNet tutorial! Upload your Bayesian Network files here to get started'
         },
         {
             element: '#fileInput1',
@@ -39,7 +39,7 @@ var tour = new Tour({
         {
             element: '#preTrained',
             title: 'Loading the pre-trained Bayesian Network',
-            content: 'In this demo, you can also skip the previous steps by loading a pre-trained network',
+            content: 'You can also skip the previous steps by playing with a pre-trained network',
             onNext: function (tour) {
                 tour.end();
             }

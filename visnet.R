@@ -46,7 +46,7 @@ UI <- fluidPage(
   dashboardPage(
     
     ##### 1.1 ) Header #####
-    dashboardHeader(title = "Bayesian Network",titleWidth = 350),
+    dashboardHeader(title = "ShinyDBNet",titleWidth = 350),
     
     ##### 1.2 ) Sidebar #####
     dashboardSidebar(
@@ -330,7 +330,7 @@ Server <- function(input, output, session) {
         shinyjs::show("multiPurposeButton")
       }else{ 
         print("DEBUG MODE DISABLED")
-        shinyjs::runjs("document.getElementById('disclaimer-content').innerHTML = 'Built with Shiny and Javascript - DEMO VERSION'")
+        shinyjs::runjs("document.getElementById('disclaimer-content').innerHTML = 'Built with Shiny and Javascript - BETA'")
         hide('preTrained')
         shinyjs::hide("multiPurposeButton")
         }
@@ -359,6 +359,9 @@ Server <- function(input, output, session) {
   observeEvent(input$file1,{
     if(!is.null(input$file1)) {
       nodes<<-read.csv(file = input$file1$datapath,stringsAsFactors=FALSE)
+      group = rep(NA,nrow(nodes))
+      evidence =rep("no_evidence",nrow(nodes))
+      nodes<<-cbind.data.frame(nodes,group,evidence,stringsAsFactors = FALSE)
       updateSelectInput(session,"nodeToQuery",choices = nodes$label)
     }
     checked$nodes <<- !is.null(input$file1)
