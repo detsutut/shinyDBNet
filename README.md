@@ -39,7 +39,7 @@ When you're done with the evidence setting, select the node you want to query an
 
 ## Development, Testing and Deployment
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
+(WIP) These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
 ## Built With
 
