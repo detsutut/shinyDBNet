@@ -553,9 +553,9 @@ Server <- function(input, output, session) {
   #' @return the node table
   getNodes = function(edges){
     label = unique(unlist(edges))
-    id = 1:length(labels)
-    group = rep(NA,length(labels))
-    evidence =rep("no_evidence",length(labels))
+    id = 1:length(label)
+    group = rep(NA,length(label))
+    evidence =rep("no_evidence",length(label))
     nodes = data.frame(id,label,group,evidence,stringsAsFactors = FALSE)
     return(nodes)
   }
