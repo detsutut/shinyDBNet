@@ -93,7 +93,7 @@ UI <- fluidPage(
                     icon = icon("bug"),
                     style = "background-color:black; color:white"),
       div(id= "disclaimer", onclick = "Shiny.setInputValue('clickDebug', 0)",
-          p(style="user-select: none", id="disclaimer-content","Built with Shiny and Javascript - DEMO VERSION")),
+          p(style="user-select: none", id="disclaimer-content","Built with Shiny and Javascript - BETA")),
       
       ##### 1.2.3 ) Hidden Controls #####
       actionButton("nodeFlag",""),
@@ -108,7 +108,6 @@ UI <- fluidPage(
       ##### 1.3.1 ) Main #####
       div(id= "loading", class = "loading",'Loading&#8230;'),
       visNetworkOutput("network", height = NULL, width = "110%"),
-      div(id= "divimage"),#, a(href="https://www.google.com/",img(class="logo", src = "src.png"))),
       
       ## 1.3.2 ) Modals #####
       bsModal("nodeModal", 
