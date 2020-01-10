@@ -51,7 +51,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Authors
 
-* **Tommaso Buonocore** - *Initial work* - [Detsutut](https://github.com/detsutut)
+* **Tommaso Buonocore** - *Author and Repository Maintainer* - [Detsutut](https://github.com/detsutut)
 
 ## License
 
