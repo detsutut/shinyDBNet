@@ -51,7 +51,7 @@ When you're done with the evidence setting, select the node you want to query an
 
 ## Authors
 
-* **Tommaso Buonocore** - *Author and Repository Maintainer* - [Detsutut](https://github.com/detsutut)
+* **Tommaso Buonocore** - *Author and Repository Maintainer* - \([GitHub](https://github.com/detsutut)\) \([LinkedIn](https://www.linkedin.com/in/tbuonocore/)\)
 
 ## License
 
