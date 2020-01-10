@@ -53,14 +53,13 @@ UI <- fluidPage(
       width = 350,
       
       ##### 1.2.1 ) File Loading #####
-      bsCollapse(id = "collapseExample", open = "Load Files...",
-                 bsCollapsePanel("Load Files...",
-                                 div(id="fileInput1",fileInput(inputId =  "file1", "Load nodes",width = "95%", multiple = FALSE)),
-                                 div(id="fileInput2",fileInput(inputId =  "file2", "Load edges",width = "95%", multiple = FALSE)),
-                                 div(id="fileInput3",fileInput(inputId =  "file3", "Load data",width = "95%", multiple = FALSE)),
+      bsCollapse(id = "collapseExample", open = "Load the Network",
+                 bsCollapsePanel("Load the Network",
+                                 div(id="fileInput2",fileInput(inputId =  "edgesFile", "Load edges",width = "95%", multiple = FALSE)),
+                                 div(id="fileInput3",fileInput(inputId =  "dataFile", "Load data",width = "95%", multiple = FALSE)),
                                  actionButton(inputId = "preTrained", 
                                               class = "debugElement",
-                                              label = "Load Pre-Trained BN", 
+                                              label = "Load Example", 
                                               width = "86%")
                  )
       ),
@@ -144,7 +143,6 @@ UI <- fluidPage(
 Server <- function(input, output, session) {
   
   ##### 2.1 ) On Server Start #####
-  hide("preTrained")
   hide("nodeFlag")
   hide("dblClickFlag")
   hide("clickFlag")
@@ -347,57 +345,37 @@ Server <- function(input, output, session) {
     bn <<- loadPreTrainedBN()
     updateSelectInput(session,"nodeToQuery",choices = nodes$label)
     output$network <- renderVisNetwork({visNetworkRenderer()})
-    updateCollapse(session,id = "collapseExample", close = "Load Files...")
+    updateCollapse(session,id = "collapseExample", close = "Load the Network")
     hideLoading()
     shinyjs::runjs("tour.start(true);tour.goTo(6);")
-  })
-  
-  #' When file1 is uploaded:
-  #' read the csv, store the node info and update the sidebar's query menu
-  #' if we already uploaded file2, we can render the network
-  #' @seealso \code{\link{renderVisNetwork}}
-  observeEvent(input$file1,{
-    if(!is.null(input$file1)) {
-      nodes<<-read.csv(file = input$file1$datapath,stringsAsFactors=FALSE)
-      group = rep(NA,nrow(nodes))
-      evidence =rep("no_evidence",nrow(nodes))
-      nodes<<-cbind.data.frame(nodes,group,evidence,stringsAsFactors = FALSE)
-      updateSelectInput(session,"nodeToQuery",choices = nodes$label)
-    }
-    checked$nodes <<- !is.null(input$file1)
-    if(isRenderable()) {
-      output$network <- renderVisNetwork({visNetworkRenderer()})
-      shinyjs::runjs("tour.start(true);tour.goTo(4);")
-    }
   })
   
   #' When file2 is uploaded:
   #' read the csv, store the edges info and update the sidebar's query menu
   #' if we already uploaded file1, we can render the network
   #' @seealso \code{\link{renderVisNetwork}} \code{\link{isRenderable}}
-  observeEvent(input$file2,{
-    if(!is.null(input$file2)) {
-      edges<<-read.csv(file = input$file2$datapath,stringsAsFactors=FALSE)
-    }
-    checked$edges <<- !is.null(input$file2)
-    if(isRenderable()) {
+  observeEvent(input$edgesFile,{
+    if(!is.null(input$edgesFile)) {
+      edges<<-read.csv(file = input$edgesFile$datapath,stringsAsFactors=FALSE)
+      nodes<<-getNodes(edges)
+      edges<<-parseEdges(edges)
+      updateSelectInput(session,"nodeToQuery",choices = nodes$label)
       output$network <- renderVisNetwork({visNetworkRenderer()})
-      shinyjs::runjs("tour.start(true);tour.goTo(4);")
     }
+    checked$edges <<- !is.null(input$edgesFile)
   })
   
   #' When file3 is uploaded:
   #' read the csv, store the data and learn the bayesian network CPTs
   #' if we already uploaded file1 and file2, we can now query the network
   #' @seealso \code{\link{renderVisNetwork}} \code{\link{isQueriable}}
-  observeEvent(input$file3,{
-    if(!is.null(input$file3)) {
-      data<<-read.csv(file = input$file3$datapath,stringsAsFactors=TRUE)
+  observeEvent(input$dataFile,{
+    if(!is.null(input$dataFile)) {
+      data<<-read.csv(file = input$dataFile$datapath,stringsAsFactors=TRUE)
     }
-    checked$data <<- !is.null(input$file3)
-    if(isQueriable()) {
+    if(checked$edges) {
       bn<<-createBN(nodes,edges,data)
-      updateCollapse(session,id = "collapseExample", close = "Load Files...")
+      updateCollapse(session,id = "collapseExample", close = "Load the Network")
       shinyjs::runjs("tour.start(true);tour.goTo(6);")
     }
   })
@@ -437,29 +415,6 @@ Server <- function(input, output, session) {
   })
   
   ##### 2.5 ) Functions #####
-  
-  #' Check if nodes and edges of the network have been uploaded
-  isRenderable = function(){
-    condition_0 = (checked$nodes && checked$edges)
-    condition_1 = FALSE
-    if(condition_0){
-      #consistency controls
-      condition_1 = length(setdiff(unique(unlist(edges)),nodes$id))==0
-    } 
-    return(condition_0 && condition_1)
-  }
-  
-  #' Check if nodes, edges and data have been uploaded
-  isQueriable = function(){
-    condition_0 = (checked$data && checked$nodes && checked$edges)
-    condition_1 = FALSE
-    if(condition_0){
-      #consistency controls
-      condition_1 = (length(setdiff(unique(unlist(edges)),nodes$id))==0) &&
-        (length(setdiff(colnames(data),nodes$label))==0)
-    } 
-    return(condition_0 && condition_1)
-  }
   
   #' Generate a Bayesian Network from the inputs.
   #' CPTs are learnt from the data. DAG is built combining nodes and edges info.
@@ -588,14 +543,34 @@ Server <- function(input, output, session) {
   #' Load a pretrained Bayesian Network, stored on the server.
   #' @return the bayesian network object
   loadPreTrainedBN = function(){
-    nodes <<- read.csv(file = "data/nodes.csv",stringsAsFactors=FALSE)   
-    edges <<- read.csv(file = "data/edges.csv",stringsAsFactors=FALSE)
-    data <<- read.csv(file="data/data.csv",stringsAsFactors = TRUE)[-1]
-    load(file = "data/bnFull")
+    edges<<-read.csv(file = "data/edges.csv",stringsAsFactors=FALSE)
+    nodes<<-getNodes(edges)
+    edges<<-parseEdges(edges)
+    load(file = "data/bn_rain_sprinkler")
     return(bn)
   }
   
+  #' Retrieve the nodes table from the edge table
+  #' @return the node table
+  getNodes = function(edges){
+    label = unique(unlist(edges))
+    id = 1:length(labels)
+    group = rep(NA,length(labels))
+    evidence =rep("no_evidence",length(labels))
+    nodes = data.frame(id,label,group,evidence,stringsAsFactors = FALSE)
+    return(nodes)
+  }
+  
+  #' Parse the edges table to be processed by the network renderer
+  #' @return the parsed edge table
+  parseEdges = function(edges){
+    edges_parsed = edges
+    for(i in 1:nrow(nodes)){
+      edges_parsed = data.frame(lapply(edges_parsed, function(x) {gsub(nodes$label[i], nodes$id[i], x)}),stringsAsFactors = FALSE)
+    }
+    return(edges_parsed)
+  }
+  
 }
-
 
 shinyApp(ui = UI, server = Server)
