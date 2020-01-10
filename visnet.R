@@ -440,6 +440,7 @@ Server <- function(input, output, session) {
       dagtools.fill(arcs_matrix = edges_n)
     bn = bntools.fit(dag = dag,data = data)
     attr(bn,"dag") = dag
+    browser()
     hideLoading()
     return(bn)
   }
@@ -542,10 +543,10 @@ Server <- function(input, output, session) {
   #' Load a pretrained Bayesian Network, stored on the server.
   #' @return the bayesian network object
   loadPreTrainedBN = function(){
-    edges<<-read.csv(file = "data/edges.csv",stringsAsFactors=FALSE)
+    edges<<-read.csv(file = "data/edges_car_insurance.csv",stringsAsFactors=FALSE)
     nodes<<-getNodes(edges)
     edges<<-parseEdges(edges)
-    load(file = "data/bn_rain_sprinkler")
+    load(file = "data/bn_car_insurance")
     return(bn)
   }
   
