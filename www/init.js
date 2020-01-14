@@ -1,7 +1,9 @@
 var x = document.getElementsByClassName('panel-heading');
 x[0].style.backgroundColor = '#222D32';
+x[1].style.backgroundColor = '#222D32';
 x = document.getElementsByClassName('panel-body');
 x[0].style.backgroundColor = '#222D32';
+x[1].style.backgroundColor = '#222D32';
 var net = document.getElementById('network');
 var content = document.getElementsByClassName('content')[0];
 net.style.height = window.innerHeight * 0.98 + 'px';
@@ -9,6 +11,9 @@ content.style.padding = '1px';
 document.getElementsByClassName('panel-default')[0].style.borderWidth = '0px';
 document.getElementsByClassName('panel-body')[0].style.borderWidth = '0px';
 document.getElementsByClassName('panel-heading')[0].style.borderWidth = '0px';
+document.getElementsByClassName('panel-default')[1].style.borderWidth = '0px';
+document.getElementsByClassName('panel-body')[1].style.borderWidth = '0px';
+document.getElementsByClassName('panel-heading')[1].style.borderWidth = '0px';
 var tour = new Tour({
     backdrop: true,
     backdropPadding: 5,

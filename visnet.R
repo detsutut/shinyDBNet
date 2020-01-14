@@ -13,8 +13,6 @@ library("pbapply")                                          #adds progress bars 
 
 source("scripts/utilities.R")                               #load utilities
 
-
-
 ##### 0.1 ) Input list #####
 
 #     - nodeToQuery: list of all the nodes [SELECT]
@@ -35,6 +33,11 @@ source("scripts/utilities.R")                               #load utilities
 ############## 1 ) UI ##############
 #UI is a fluid page (reactive design) made of 3 components: Header, Sidebar and Body.
 
+HTMLDownloadButton <- function(outputId, label = "Download", style){
+  tags$a(id = outputId, class = "btn btn-default shiny-download-link", href = "", icon("globe"),
+         target = "_blank", download = NA, NULL, label, style = style)
+}
+
 UI <- fluidPage(
   
   ##### 1.0 ) Stylesheets and libraries #####
@@ -43,6 +46,7 @@ UI <- fluidPage(
   tags$script(src="bootstrap-tour-standalone.min.js"),
   tags$script(src="cookie.js"), #cookie handler
   theme = "appstyle.css", #custom css
+
   dashboardPage(
     
     ##### 1.1 ) Header #####
@@ -53,7 +57,7 @@ UI <- fluidPage(
       width = 350,
       
       ##### 1.2.1 ) File Loading #####
-      bsCollapse(id = "collapseExample", open = "Load the Network",
+      bsCollapse(id = "collapseLoad", open = "Load the Network",
                  bsCollapsePanel("Load the Network",
                                  div(id="fileInput2",fileInput(inputId =  "edgesFile", "Load edges",width = "95%", multiple = FALSE)),
                                  div(id="fileInput3",fileInput(inputId =  "dataFile", "Load data",width = "95%", multiple = FALSE)),
@@ -64,23 +68,26 @@ UI <- fluidPage(
                  )
       ),
       hr(),
-      
       ##### 1.2.2 ) Query #####
-      div(id="querySection",
-        selectInput(inputId = "nodeToQuery", 
-                    label = "Node to query", 
-                    choices = c(""),
-                    selected = NULL, 
-                    multiple = FALSE,
-                    selectize = TRUE, 
-                    width ="95%", 
-                    size = NULL),
-        actionButton(inputId = "query", 
-                    label = "Query", 
-                    width = "87%", 
-                    icon = icon("brain"),
-                    style = "background-color:orange; color:white")),
-        hr(),
+      bsCollapse(id = "collapseQuery", open = "Network Inference",
+                 bsCollapsePanel("Network Inference",
+                 div(id="querySection",
+                     selectInput(inputId = "nodeToQuery", 
+                                 label = "Node to query", 
+                                 choices = c(""),
+                                 selected = NULL, 
+                                 multiple = FALSE,
+                                 selectize = TRUE, 
+                                 width ="95%", 
+                                 size = NULL),
+                     actionButton(inputId = "query", 
+                                  label = "Query", 
+                                  width = "87%", 
+                                  icon = icon("brain"),
+                                  style = "background-color:orange; color:white"))
+                 )
+      ),
+      hr(),
         actionButton(inputId = "evidenceMenuButton", 
                     label = " Evidence Panel", 
                     width = "87%", 
@@ -99,7 +106,8 @@ UI <- fluidPage(
       actionButton("nodeFlag",""),
       numericInput("dblClickFlag","",1),
       numericInput("clickFlag","",1),
-      numericInput("clickDebug","",1)
+      numericInput("clickDebug","",1),
+      fileInput(inputId =  "bnUpload", "",width = "95%", multiple = FALSE)
     ),
     
     ##### 1.3 ) Body #####
@@ -109,10 +117,12 @@ UI <- fluidPage(
       div(id= "loading", class = "loading",'Loading&#8230;'),
       visNetworkOutput("network", height = NULL, width = "110%"),
       fixedPanel(
+        actionButton(inputId = "uploadBN",icon = icon("upload"), label = "upload BN",style = "background-color:#367FA9; color:white"),
         downloadButton(outputId ="downloadBN", label = "download BN",style = "background-color:#367FA9; color:white"),
-        downloadButton(outputId ="downloadHTML", label = "HTML",style = "background-color:#367FA9; color:white"),
+        HTMLDownloadButton(outputId ="downloadHTML", label = "HTML",style = "background-color:#367FA9; color:white"),
         right = 50,
-        top = 70
+        top = 70,
+        style = "background: rgba(150,150,180,0.2); padding: 10px; border-radius:15px"
       ),
       
       ## 1.3.2 ) Modals #####
@@ -154,6 +164,7 @@ Server <- function(input, output, session) {
   hide("clickDebug")
   hide('loading')
   hide("multiPurposeButton")
+  hide("bnUpload")
   checked = list(nodes=FALSE,edges=FALSE,data=FALSE)
   nodes = NULL
   edges = NULL
@@ -350,7 +361,7 @@ Server <- function(input, output, session) {
     bn <<- loadPreTrainedBN()
     updateSelectInput(session,"nodeToQuery",choices = nodes$label)
     output$network <- renderVisNetwork({visNetworkRenderer()})
-    updateCollapse(session,id = "collapseExample", close = "Load the Network")
+    updateCollapse(session,id = "collapseLoad", close = "Load the Network")
     hideLoading()
     shinyjs::runjs("tour.start(true);tour.goTo(6);")
   })
@@ -380,7 +391,7 @@ Server <- function(input, output, session) {
     }
     if(checked$edges) {
       bn<<-createBN(nodes,edges,data)
-      updateCollapse(session,id = "collapseExample", close = "Load the Network")
+      updateCollapse(session,id = "collapseLoad", close = "Load the Network")
       shinyjs::runjs("tour.start(true);tour.goTo(6);")
     }
   })
@@ -410,6 +421,8 @@ Server <- function(input, output, session) {
     }
   })
   
+  
+  
   #' When evidence radio buttons change:
   #' update di evidence
   #' @seealso \code{\link{updateEvidence}}
@@ -432,6 +445,21 @@ Server <- function(input, output, session) {
       visSave(visNetworkRenderer(), file = con)
     }
   )
+  
+  observeEvent(input$uploadBN,{
+    runjs("document.getElementById('bnUpload').click();")
+  })
+  
+  observeEvent(input$bnUpload,{
+    if(!is.null(input$bnUpload)) {
+      showLoading()
+      bn <<- loadPreTrainedBN(input$bnUpload$datapath)
+      updateSelectInput(session,"nodeToQuery",choices = nodes$label)
+      output$network <- renderVisNetwork({visNetworkRenderer()})
+      updateCollapse(session,id = "collapseLoad", close = "Load the Network")
+      hideLoading()
+    }
+  })
   
   ##### 2.5 ) Functions #####
   
@@ -460,7 +488,6 @@ Server <- function(input, output, session) {
       dagtools.fill(arcs_matrix = edges_n)
     bn = bntools.fit(dag = dag,data = data)
     attr(bn,"dag") = dag
-    browser()
     hideLoading()
     return(bn)
   }
@@ -562,8 +589,8 @@ Server <- function(input, output, session) {
   
   #' Load a pretrained Bayesian Network, stored on the server.
   #' @return the bayesian network object
-  loadPreTrainedBN = function(){
-    load(file = "data/bn_car_insurance")
+  loadPreTrainedBN = function(file = "data/bn_car_insurance"){
+    load(file)
     dag = attr(bn,"dag")
     e = as.data.frame(dag$arcs)
     nodes<<-getNodes(e)
@@ -593,5 +620,5 @@ Server <- function(input, output, session) {
   }
   
 }
-
+   
 shinyApp(ui = UI, server = Server)
