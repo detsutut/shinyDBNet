@@ -108,6 +108,12 @@ UI <- fluidPage(
       ##### 1.3.1 ) Main #####
       div(id= "loading", class = "loading",'Loading&#8230;'),
       visNetworkOutput("network", height = NULL, width = "110%"),
+      fixedPanel(
+        downloadButton(outputId ="downloadBN", label = "download BN",style = "background-color:#367FA9; color:white"),
+        downloadButton(outputId ="downloadHTML", label = "HTML",style = "background-color:#367FA9; color:white"),
+        right = 50,
+        top = 70
+      ),
       
       ## 1.3.2 ) Modals #####
       bsModal("nodeModal", 
@@ -413,6 +419,20 @@ Server <- function(input, output, session) {
     }
   })
   
+  output$downloadBN <- downloadHandler(
+    filename = "customBN.RData",
+    content = function(con) {
+      save(bn, file = con)
+    }
+  )
+  
+  output$downloadHTML <- downloadHandler(
+    filename = "customBN.html",
+    content = function(con) {
+      visSave(visNetworkRenderer(), file = con)
+    }
+  )
+  
   ##### 2.5 ) Functions #####
   
   #' Generate a Bayesian Network from the inputs.
@@ -543,10 +563,11 @@ Server <- function(input, output, session) {
   #' Load a pretrained Bayesian Network, stored on the server.
   #' @return the bayesian network object
   loadPreTrainedBN = function(){
-    edges<<-read.csv(file = "data/edges_car_insurance.csv",stringsAsFactors=FALSE)
-    nodes<<-getNodes(edges)
-    edges<<-parseEdges(edges)
     load(file = "data/bn_car_insurance")
+    dag = attr(bn,"dag")
+    e = as.data.frame(dag$arcs)
+    nodes<<-getNodes(e)
+    edges<<-parseEdges(e)
     return(bn)
   }
   
