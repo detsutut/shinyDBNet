@@ -48,7 +48,7 @@ UI <- fluidPage(
   theme = "appstyle.css", #custom css
 
   dashboardPage(
-    
+    title="ShinyDBNet",
     ##### 1.1 ) Header #####
     dashboardHeader(title = p("ShinyDBNet",tags$sup("Beta")),titleWidth = 350),
     
