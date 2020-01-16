@@ -50,7 +50,7 @@ UI <- fluidPage(
   dashboardPage(
     
     ##### 1.1 ) Header #####
-    dashboardHeader(title = "ShinyDBNet",titleWidth = 350),
+    dashboardHeader(title = p("ShinyDBNet",tags$sup("Beta")),titleWidth = 350),
     
     ##### 1.2 ) Sidebar #####
     dashboardSidebar(
