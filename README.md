@@ -91,9 +91,23 @@ In order to anser these questions, we must learn the Discrete Bayesian Network f
 
 Once the network is learnt and rendered, we can start inferencing our model to answer the previous questions. Let's first set `ChestXRay = YES` by clicking on the node and checking the radio button.
 
-IMAGE HERE
+<p align="center">
+  <img src="src/evidence.png" alt="setting the evidence on the ChestXRay node" width="60%"/>
+  <p align ="center"><small>Setting the evidence on the ChestXRay node</small></p>
+</p>
 
-After setting the evidence on the observed node, we can perform a conditional probability query on the node of interest, in this case `Dyspnoea` 
+After setting the evidence on the observed node, we can perform a conditional probability query on the node of interest, in this case `Dyspnoea`.
+
+<p align="center">
+  <img src="src/dyspnoeaquery.png" alt="conditional probability query on Dyspnoea" width="90%"/>
+  <p align ="center"><small>Conditional probability query on Dyspnoea</small></p>
+</p>
+
+As shown in the figure above (A.), we can assess that knowing a patient has gone under a chest X-ray scan increases the probability of having dyspnoea. 
+
+Querying other nodes of the network under the same evidence set, we can clearly see that the reason of this increment is due to the association between `ChestXRay`, `LungCancer` and `Tubercolosis`: if a patient undergoes a chest X-ray, chances are that he's doing it because he has `Tubercolosis` or `LungCancer`, which have a direct influence on the `Dyspnoea` value.
+
+Setting a negative evidence on both the `Tubercolosis` and the `LungCancer` nodes (B.) therefore "cancels out" the effect of `ChestXRay` restoring a distribution very close to the prior.
 
 
 
