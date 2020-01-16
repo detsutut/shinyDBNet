@@ -107,13 +107,16 @@ As shown in the figure above (A.), we can assess that knowing a patient has gone
 
 Querying other nodes of the network under the same evidence set, we can clearly see that the reason of this increment is due to the association between `ChestXRay`, `LungCancer` and `Tubercolosis`: if a patient undergoes a chest X-ray, chances are that he's doing it because he has `Tubercolosis` or `LungCancer`, which have a direct influence on the `Dyspnoea` value.
 
-Setting a negative evidence on both the `Tubercolosis` and the `LungCancer` nodes (B.) therefore "cancels out" the effect of `ChestXRay` restoring a distribution very close to the prior.
+Setting a negative evidence on both the `Tubercolosis` and the `LungCancer` nodes (B.) therefore "cancels out" the effect of `ChestXRay` restoring a distribution very close to the prior. Remember that you can use the `Evidence Menu` to set the evidence on multiple nodes quickly.
 
+Let's see how being a smoker influences `Lung Cancer`, `Bronchitis`, and `Tubercolosis`.
 
+<p align="center">
+  <img src="src/querySmoking.png" alt="conditional probability query on Lung Cancer, Bronchitis and Tubercolosis" width="100%"/>
+  <p align ="center"><small>Conditional probability query on Bronchitis (A.), Lung Cancer (B.) and Tubercolosis (C.)</small></p>
+</p>
 
-### DBN Learning
-
-
+In all the three queries, being a smoker increases the chances of having the desease, but with different magnitudes.
 
 ## Built With
 
@@ -127,7 +130,9 @@ Setting a negative evidence on both the `Tubercolosis` and the `LungCancer` node
 
 * **Why the posterior distribution of the queried node is zero?** *Logic sampling, the method currently implemented for conditional probability queries, is a form of rejection sampling. Therefore, only the obervations matching evidence (out of the n that are generated) are returned, and their number depends on the probability of evidence. If the evidence you set doesn't mach any of your observations, then the number generated samples will be zero.*
   
-* **After setting the evidence, the distribution of the queried node don't change. Why?** *There are several scenarios in which this may happen. First, check that the distributions you are seeing come from the 'Query Results' panel and not from the `Node Details` one (where you can see only the prior distribution). If the panel you are checking is correct, then the variable(s) you set might not influence the target or your query, or their overall influence might be cancelled out by the single components.*
+* **After setting the evidence, the distribution of the queried node don't change. Why?** *There are several scenarios in which this may happen. First, check that the distributions you are seeing come from the 'Query Results' panel and not from the `Node Details` one (where you can see only the prior distribution). If the panel you are checking is correct, then the variable(s) you set might not influence the target or your query, or their overall influence might be cancelled out by the single components. Check the [example](https://github.com/detsutut/shinyDBNet#example-the-asia-dataset) to see how it happens.*
+
+* **Querying the same node multiple times, under the same evidence set, gives me different distributions. Why?** *Queries are performed using approximate inference methods based on Monte-Carlo Particle Filters. Some variability in the results is threfore expected since they are Monte Carlo estimates. If the variability in the results is too high, then your evidence is likely to have a very low probability (i.e. very complex query) and you need to generate more particles to obtain a reasonably precise estimate of that conditional probability. Unfortunately, the number of particles to generate is not user-defined at the moment.*
 
 ## Authors
 
