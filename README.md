@@ -13,7 +13,8 @@ You can run the app from [here](https://detsutut.shinyapps.io/shinyDBNet/) or fr
 In order to learn the DBN, two files must be uploaded. These files describes the network in terms of its nodes (i.e. variables), its edges (i.e. relationships between variables) and the data from which to learn the conditional probability tables (i.e. the dataset you're interested in learning from). The conditional probability tables (CPTs) are learnt using posterior Bayesian estimation arising from a flat, non-informative prior \[Nagarajan et al., 2013\].
 
 <p align="center">
-  <img src="src/learnthenetwork.png"/>
+  <img src="src/learnthenetwork.png" alt="network learning panel" width="40%"/>
+  <p align ="center"><small>Network Learning Panel</small></p>
 </p>
 
 Files have to be in \*.csv format and must follow this templates:
@@ -45,7 +46,8 @@ In the same way, the currently displayed DBN can be downloaded as an R object th
 If you only want to share the visual representation of your DBN, without allowing any editing, you can use the `HTML` button to download the canvas as an HTML page. Right click and "save image as..." will do the trick if you want a PNG file instead.
 
 <p align="center">
-  <img src="src/downloadpanel.png"/>
+  <img src="src/downloadpanel.png" alt="download/upload panel" width="40%"/>
+  <p align ="center"><small>Download/Upload Panel</small></p>
 </p>
 
 If you don't have a pre-trained DBN to load and no data to learn from, you can play with a **pre-trained example** by clicking the `Load Example` button. This will upload a network for evaluating car insurance risks, which is detailedly described [here](https://www.bnlearn.com/documentation/man/insurance.html).
@@ -57,7 +59,8 @@ Click on the nodes to see their prior distributions, where you can also set the 
 When you're done with the evidence setting, select the node you want to query and use the sidebar panel to perform the query and see how the distribution changes.
 
 <p align="center">
-  <img src="src/networkinference.png"/>
+  <img src="src/networkinference.png" alt="network inference" width="40%"/>
+  <p align ="center"><small>Query Panel</small></p>
 </p>
 
 The metod used to perform this conditional probability queries it logic sampling, used to generate random samples conditional on the evidence. More information on logic sampling can be found [here](https://www.bnlearn.com/documentation/man/cpquery.html).
