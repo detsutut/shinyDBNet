@@ -1,8 +1,13 @@
 # ShinyDBNet Documentation
 
-`shinyDBNet` is a Shiny application that provides an interactive framework for reasoning with **Discrete Bayesian Networks** (DBNs).
+This open-source Shiny application provides an **interactive framework for learning, visualizing and reasoning with Discrete Bayesian Networks** (DBNs), a type of probabilistic graphical model that uses Bayesian inference for probability computations.
 
-*Disclaimer* This documentation assumes that the reader is familiar with of Bayesian Networks. If not so, [here](https://machinelearningmastery.com/introduction-to-bayesian-belief-networks/) is a gentle introduction to the main concepts of Bayesian Networks, along with some further readings.
+*This documentation assumes that the reader is already familiar with of Bayesian Networks. If not so, a gentle introduction to the main concepts of Bayesian Networks can be found [here](https://machinelearningmastery.com/introduction-to-bayesian-belief-networks/), along with some further readings.*
+
+<p align="center">
+  <img src="src/screenshot.png" alt="Application preview" width="90%"/>
+  <p align ="center"><small>Application preview</small></p>
+</p>
 
 ## Getting Started
 
