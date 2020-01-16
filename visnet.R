@@ -57,8 +57,8 @@ UI <- fluidPage(
       width = 350,
       
       ##### 1.2.1 ) File Loading #####
-      bsCollapse(id = "collapseLoad", open = "Load the Network",
-                 bsCollapsePanel("Load the Network",
+      bsCollapse(id = "collapseLoad", open = "Learn The Network",
+                 bsCollapsePanel("Learn The Network",
                                  div(id="fileInput2",fileInput(inputId =  "edgesFile", "Load edges",width = "95%", multiple = FALSE)),
                                  div(id="fileInput3",fileInput(inputId =  "dataFile", "Load data",width = "95%", multiple = FALSE)),
                                  actionButton(inputId = "preTrained", 
@@ -361,7 +361,7 @@ Server <- function(input, output, session) {
     bn <<- loadPreTrainedBN()
     updateSelectInput(session,"nodeToQuery",choices = nodes$label)
     output$network <- renderVisNetwork({visNetworkRenderer()})
-    updateCollapse(session,id = "collapseLoad", close = "Load the Network")
+    updateCollapse(session,id = "collapseLoad", close = "Learn The Network")
     hideLoading()
     shinyjs::runjs("tour.start(true);tour.goTo(6);")
   })
@@ -391,7 +391,7 @@ Server <- function(input, output, session) {
     }
     if(checked$edges) {
       bn<<-createBN(nodes,edges,data)
-      updateCollapse(session,id = "collapseLoad", close = "Load the Network")
+      updateCollapse(session,id = "collapseLoad", close = "Learn The Network")
       shinyjs::runjs("tour.start(true);tour.goTo(6);")
     }
   })
@@ -456,7 +456,7 @@ Server <- function(input, output, session) {
       bn <<- loadPreTrainedBN(input$bnUpload$datapath)
       updateSelectInput(session,"nodeToQuery",choices = nodes$label)
       output$network <- renderVisNetwork({visNetworkRenderer()})
-      updateCollapse(session,id = "collapseLoad", close = "Load the Network")
+      updateCollapse(session,id = "collapseLoad", close = "Learn The Network")
       hideLoading()
     }
   })
