@@ -78,13 +78,28 @@ WORK IN PROGRESS.
 
 Here we will learn a DBN from a small synthetic data set \[Lauritzen and Spiegelhalter, 1988\] about lung diseases (tuberculosis, lung cancer or bronchitis) and visits to Asia. This example can be found on Scutari's [bnlearn webpage](https://www.bnlearn.com/documentation/man/asia.html) too.
 
-Lauritzen and Spiegelhalter (1988) motivate their work as follows:
+Lauritzen and Spiegelhalter (1988) describe it as follows:
 
-“ *Shortness-of-breath (dyspnoea) may be due to tuberculosis, lung cancer or bronchitis, or none of them, or more than one of them. A recent visit to Asia increases the chances of tuberculosis, while smoking is known to be a risk factor for both lung cancer and bronchitis. The results of a single chest X-ray do not discriminate between lung cancer and tuberculosis, as neither does the presence or absence of dyspnoea.* ”
+“*Shortness-of-breath (dyspnoea) may be due to tuberculosis, lung cancer or bronchitis, or none of them, or more than one of them. A recent visit to Asia increases the chances of tuberculosis, while smoking is known to be a risk factor for both lung cancer and bronchitis. The results of a single chest X-ray do not discriminate between lung cancer and tuberculosis, as neither does the presence or absence of dyspnoea.*”
 
-Standard learning algorithms are not able to recover the true structure of the network because of the presence of a node (E) with conditional probabilities equal to both 0 and 1. Monte Carlo tests seems to behave better than their parametric counterparts.
+We might then be interested in answer some questions about how these variables interact with eachother, as for instance:
+* How does knowing that the subject took a `ChestXRay` scan in the last year influences our guessing on `Dyspnoea`?
+* How do the chances of having `Dyspnoea` change if we also know that the patient has neither `Tubercolosis` nor `Lung Cancer`?
+* How does smoking affect the probabilities of having a `Lung Cancer` or `Bronchitis`? Does it affect `Tubercolosis` as well?
 
-WORK IN PROGRESS.
+In order to anser these questions, we must learn the Discrete Bayesian Network first. Thus, the two files mentioned in [Getting Started](https://github.com/detsutut/shinyDBNet#getting-started) must be loaded (you can find them in the data folder).
+
+Once the network is learnt and rendered, we can start inferencing our model to answer the previous questions. Let's first set `ChestXRay = YES` by clicking on the node and checking the radio button.
+
+IMAGE HERE
+
+After setting the evidence on the observed node, we can perform a conditional probability query on the node of interest, in this case `Dyspnoea` 
+
+
+
+### DBN Learning
+
+
 
 ## Built With
 
