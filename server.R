@@ -1,161 +1,6 @@
-############## 0 ) INIT ##############
-
-library("shiny")
-library("shinyjs")
-library("shinydashboard")
-library("ggplot2")
-library("plotly")
-library("shinyBS")
-library("visNetwork")
-library("bnlearn")                                          #bayesian networks handler
-library("gRain")                                            #bayesian networks visualizer
-library("pbapply")                                          #adds progress bars to the apply family
-
-source("scripts/utilities.R")                               #load utilities
-
-##### 0.1 ) Input list #####
-
-#     - nodeToQuery: list of all the nodes [SELECT]
-#     - query: button to start a query on the selected node [ACTION BTN]
-#     - nodeFlag: button to toggle the node details modal [ACTION BTN] (HIDDEN)
-#     - dblClickFlag: 0 when a dblClick is detected, 1 otherwise [NUMERIC] (HIDDEN)
-#     - clickFlag: 0 when a singleClick is detected, 1 otherwise [NUMERIC] (HIDDEN)
-#     - clickDebug: counter that activates debug mode when it reaches 10 [NUMERIC] (HIDDEN)
-#     - network: network container [PLOT]
-#     - nodePlot: barplot with node distribution [PLOT]
-#     - nodeModal: modal to show node details activated by nodeFlag [MODAL]
-#     - queryModal: modal to show query details activated by query [MODAL]
-#     - evidence: radio buttons listing all the values of the node [RADIOS]
-#     - evidenceMenu: modal that shows the list of nodes and their values to set all the evidence at once [MODAL]
-#     - evidenceMenuButton: button that opens the evidence menu modal [ACTION BTN]
-#     - preTrained: button that loads a pre-trained BN [ACTION BTN]
-
-############## 1 ) UI ##############
-#UI is a fluid page (reactive design) made of 3 components: Header, Sidebar and Body.
-
-HTMLDownloadButton <- function(outputId, label = "Download", style){
-  tags$a(id = outputId, class = "btn btn-default shiny-download-link", href = "", icon("globe"),
-         target = "_blank", download = NA, NULL, label, style = style)
-}
-
-UI <- fluidPage(
-  
-  ##### 1.0 ) Stylesheets and libraries #####
-  useShinyjs(),
-  tags$link(href="bootstrap-tour-standalone.min.css",rel="stylesheet"),
-  tags$script(src="bootstrap-tour-standalone.min.js"),
-  tags$script(src="cookie.js"), #cookie handler
-  theme = "appstyle.css", #custom css
-
-  dashboardPage(
-    title="ShinyDBNet",
-    ##### 1.1 ) Header #####
-    dashboardHeader(title = p("ShinyDBNet",tags$sup("Beta")),titleWidth = 350),
-    
-    ##### 1.2 ) Sidebar #####
-    dashboardSidebar(
-      width = 350,
-      
-      ##### 1.2.1 ) File Loading #####
-      bsCollapse(id = "collapseLoad", open = "Learn The Network",
-                 bsCollapsePanel("Learn The Network",
-                                 div(id="fileInput2",fileInput(inputId =  "edgesFile", "Load edges",width = "95%", multiple = FALSE)),
-                                 div(id="fileInput3",fileInput(inputId =  "dataFile", "Load data",width = "95%", multiple = FALSE)),
-                                 actionButton(inputId = "preTrained", 
-                                              class = "debugElement",
-                                              label = "Load Example", 
-                                              width = "86%")
-                 )
-      ),
-      hr(),
-      ##### 1.2.2 ) Query #####
-      bsCollapse(id = "collapseQuery", open = "Network Inference",
-                 bsCollapsePanel("Network Inference",
-                 div(id="querySection",
-                     selectInput(inputId = "nodeToQuery", 
-                                 label = "Node to query", 
-                                 choices = c(""),
-                                 selected = NULL, 
-                                 multiple = FALSE,
-                                 selectize = TRUE, 
-                                 width ="95%", 
-                                 size = NULL),
-                     actionButton(inputId = "query", 
-                                  label = "Query", 
-                                  width = "87%", 
-                                  icon = icon("brain"),
-                                  style = "background-color:orange; color:white"))
-                 )
-      ),
-      hr(),
-        actionButton(inputId = "evidenceMenuButton", 
-                    label = " Evidence Panel", 
-                    width = "87%", 
-                    icon = icon("clipboard-list"),
-                    style = "background-color:#4CAF50; color:white"),
-        hr(),   
-        actionButton(inputId = "multiPurposeButton", 
-                    label = "Multi-purpose Debug Button", 
-                    width = "87%", 
-                    icon = icon("bug"),
-                    style = "background-color:black; color:white"),
-      div(id= "disclaimer", onclick = "Shiny.setInputValue('clickDebug', 0)",
-          p(style="user-select: none", id="disclaimer-content","Built with Shiny and Javascript - BETA")),
-      
-      ##### 1.2.3 ) Hidden Controls #####
-      actionButton("nodeFlag",""),
-      numericInput("dblClickFlag","",1),
-      numericInput("clickFlag","",1),
-      numericInput("clickDebug","",1),
-      fileInput(inputId =  "bnUpload", "",width = "95%", multiple = FALSE)
-    ),
-    
-    ##### 1.3 ) Body #####
-    dashboardBody( 
-      
-      ##### 1.3.1 ) Main #####
-      div(id= "loading", class = "loading",'Loading&#8230;'),
-      visNetworkOutput("network", height = NULL, width = "110%"),
-      fixedPanel(
-        actionButton(inputId = "uploadBN",icon = icon("upload"), label = "upload BN",style = "background-color:#367FA9; color:white"),
-        downloadButton(outputId ="downloadBN", label = "download BN",style = "background-color:#367FA9; color:white"),
-        HTMLDownloadButton(outputId ="downloadHTML", label = "HTML",style = "background-color:#367FA9; color:white"),
-        right = 50,
-        top = 70,
-        style = "background: rgba(150,150,180,0.2); padding: 10px; border-radius:15px"
-      ),
-      
-      ## 1.3.2 ) Modals #####
-      bsModal("nodeModal", 
-              "Node Details", 
-              "nodeFlag",
-              size = "small",
-              div(id= "loading2", class = "loading",'Loading&#8230;'),
-              plotOutput("nodePlot"),
-              radioButtons("evidence", "Evidence:",c(""))),
-      bsModal("evidenceMenu", 
-              "Evidence Menu", 
-              "evidenceMenuButton",
-              size = "big",
-              uiOutput("evidenceControls")),
-      bsModal("queryModal", 
-              "Query Results", 
-              "query",
-              size = "big",
-              div(id= "loading3", class = "loading",'Loading&#8230;'),
-              plotOutput("queryPlot"),
-              h4("Evidence details", align = "center"),
-              tableOutput('evidenceTable'))
-      )
-  ),
-  
-  ##### 1.4 ) JS Scripts #####
-  tags$script(src="init.js")
-)
-
 ##### 2 ) SERVER #####
 
-Server <- function(input, output, session) {
+function(input, output, session) {
   
   ##### 2.1 ) On Server Start #####
   hide("nodeFlag")
@@ -189,31 +34,31 @@ Server <- function(input, output, session) {
   )
   
   ## 2.2 ) Plots #####
-
+  
   #' Plot the distribution of a target node.
   #' 
   #' @param withEvidence if evidence is set, prob is 0% 0% ... 100% ... 0% 0%
   #' @examples
   #' nodePlot(withEvidence = TRUE)
   nodePlot <- function(withEvidence = FALSE){
-      if(!is.null(input$current_node_id)){
-        nodeInfo = getNodeInfo(input$current_node_id)
-        nodeName = nodeInfo$name
-        if(withEvidence){
-          choices = nodeInfo$choices[-1]
-          prob = rep(0,length(choices))
-          names(prob) = choices
-          prob[nodeInfo$evidence]=1
-        } else {
-          s = table(rbn(bn, n = 5000, debug = FALSE)[nodeName])
-          prob = s/sum(s)
-        }
-        barplot(prob/sum(prob),
-                col = rainbow(n = length(prob), s = 0.5),
-                main = toupper(nodeName),
-                ylim=c(0,1))
+    if(!is.null(input$current_node_id)){
+      nodeInfo = getNodeInfo(input$current_node_id)
+      nodeName = nodeInfo$name
+      if(withEvidence){
+        choices = nodeInfo$choices[-1]
+        prob = rep(0,length(choices))
+        names(prob) = choices
+        prob[nodeInfo$evidence]=1
+      } else {
+        s = table(rbn(bn, n = 5000, debug = FALSE)[nodeName])
+        prob = s/sum(s)
       }
-      hideLoading(modal=TRUE)
+      barplot(prob/sum(prob),
+              col = rainbow(n = length(prob), s = 0.5),
+              main = toupper(nodeName),
+              ylim=c(0,1))
+    }
+    hideLoading(modal=TRUE)
   }
   
   #' Plot the posterior distribution of a target query node.
@@ -240,7 +85,7 @@ Server <- function(input, output, session) {
   }
   
   ##### 2.3 ) Network #####
-
+  
   #' Render the bayesian network. 
   #' Click and DblClick events chenge flags values triggering external actions.
   #' GravitationalConstant in \code{\link[visPhysics]{visPhysics}} can be changed to shrink/expand the network when rendering
@@ -309,9 +154,9 @@ Server <- function(input, output, session) {
   #' Update the selected node in the sidebar's query menu
   #' @seealso \code{\link{getNodeInfo}}, \code{\link{updateEvidence}}
   observeEvent(input$evidenceMenuButton,{
-      lapply(1:length(nodes$id), function(i){
-        id = nodes[i,]$id
-        if(!evidenceMenuUiInjected){
+    lapply(1:length(nodes$id), function(i){
+      id = nodes[i,]$id
+      if(!evidenceMenuUiInjected){
         isolate({
           nodeInfo = getNodeInfo(id)
           insertUI(
@@ -320,10 +165,10 @@ Server <- function(input, output, session) {
             ui = tags$div(id="whocares",radioButtons(paste0("evidence_",id), label = toupper(nodeInfo$name), choices = nodeInfo$choices))
           )
         })}
-        observeEvent(input[[paste0("evidence_",id)]],{
-          updateEvidence(id,input[[paste0("evidence_",id)]])
-        })
+      observeEvent(input[[paste0("evidence_",id)]],{
+        updateEvidence(id,input[[paste0("evidence_",id)]])
       })
+    })
     evidenceMenuUiInjected <<- TRUE
   })
   
@@ -347,7 +192,7 @@ Server <- function(input, output, session) {
         shinyjs::runjs("document.getElementById('disclaimer-content').innerHTML = 'Built with Shiny and Javascript - BETA'")
         hide('preTrained')
         shinyjs::hide("multiPurposeButton")
-        }
+      }
       debug <<- !debug
       debugCounter <<- 0
     }
@@ -395,7 +240,7 @@ Server <- function(input, output, session) {
       shinyjs::runjs("tour.start(true);tour.goTo(6);")
     }
   })
-
+  
   #' When query is uploaded:
   #' retrieve the info 
   #' if we already uploaded file1 and file2, we can now query the network
@@ -411,8 +256,8 @@ Server <- function(input, output, session) {
     } else {
       #dynamic querying is a bit tricky for cpdist. However, this approach has been suggested by the author of the package himself. 
       queryEvidenceString = paste("(", evidenceNodes, " == '",                         #build a set of node-value couples as a string
-                  sapply(evidenceStates, as.character), "')",
-                  sep = "", collapse = " & ")
+                                  sapply(evidenceStates, as.character), "')",
+                                  sep = "", collapse = " & ")
       queryNodeString = paste("'", input$nodeToQuery, "'", sep = "")                   #query node as a string
       queryData = eval(parse(text = paste("table(cpdist(bn, ", queryNodeString, ", ",  #merge together and run the query
                                           queryEvidenceString, "))", sep = ""))) 
@@ -620,5 +465,3 @@ Server <- function(input, output, session) {
   }
   
 }
-   
-shinyApp(ui = UI, server = Server)
