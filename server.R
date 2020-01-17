@@ -50,7 +50,7 @@ function(input, output, session) {
         names(prob) = choices
         prob[nodeInfo$evidence]=1
       } else {
-        s = table(rbn(bn, n = 5000, debug = FALSE)[nodeName])
+        s = table(rbn(bn, n = 5000, debug = FALSE)[as.character(nodeName)])
         prob = s/sum(s)
       }
       barplot(prob/sum(prob),
@@ -108,7 +108,7 @@ function(input, output, session) {
         function(nodes) {
           Shiny.onInputChange('current_node_id', nodes.nodes);
           Shiny.setInputValue('dblClickFlag', 0)
-          console.log(nodes.nodes)
+          if(debugFlag) console.log(nodes.nodes)
         ;}",
                 click = "
         function(nodes) {
@@ -174,6 +174,7 @@ function(input, output, session) {
   
   #' When clickDebug is clicked:
   #' increment the counter and activate/deactivate debug mode when counter goes up to 10
+  #' The 'debug' variable keeps track of the debug state on the R side, 'debugFlag' does the same on the JavaScript side
   #' @seealso \code{\link{getNodeInfo}}, \code{\link{updateEvidence}}
   observeEvent(input$clickDebug,{
     if(input$clickDebug == 0) {
@@ -184,12 +185,15 @@ function(input, output, session) {
     if(debugCounter==10) {
       if(!debug) {
         print("DEBUG MODE ENABLED")
+        session$sendCustomMessage("debug", "on")
+        showNotification("You entered the developer mode!\nCheck the console to get further details on what is happening under the hood", type = "warning")
         shinyjs::runjs("document.getElementById('disclaimer-content').innerHTML = 'Made by Buonocore T.M. [DEBUG MODE]'")
         show('preTrained')
         shinyjs::show("multiPurposeButton")
       }else{ 
         print("DEBUG MODE DISABLED")
-        shinyjs::runjs("document.getElementById('disclaimer-content').innerHTML = 'Built with Shiny and Javascript - BETA'")
+        session$sendCustomMessage("debug", "off")
+        shinyjs::runjs("document.getElementById('disclaimer-content').innerHTML = 'Built with Shiny and Javascript'")
         hide('preTrained')
         shinyjs::hide("multiPurposeButton")
       }
@@ -436,6 +440,7 @@ function(input, output, session) {
   #' @return the bayesian network object
   loadPreTrainedBN = function(file = "data/bn_car_insurance"){
     load(file)
+    bn<<-bn
     dag = attr(bn,"dag")
     e = as.data.frame(dag$arcs)
     nodes<<-getNodes(e)

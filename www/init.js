@@ -1,3 +1,4 @@
+//Setting manually some CSS on panels that must be load AFTER the app boot
 var x = document.getElementsByClassName('panel-heading');
 x[0].style.backgroundColor = '#222D32';
 x[1].style.backgroundColor = '#222D32';
@@ -14,6 +15,7 @@ document.getElementsByClassName('panel-heading')[0].style.borderWidth = '0px';
 document.getElementsByClassName('panel-default')[1].style.borderWidth = '0px';
 document.getElementsByClassName('panel-body')[1].style.borderWidth = '0px';
 document.getElementsByClassName('panel-heading')[1].style.borderWidth = '0px';
+//Tutorial
 var tour = new Tour({
     backdrop: true,
     backdropPadding: 5,
@@ -81,3 +83,6 @@ var tour = new Tour({
         }
     ]
 });
+//Debug mode handling
+var debugFlag=false;
+Shiny.addCustomMessageHandler("debug", function(message){debugFlag = (message=="on")});
