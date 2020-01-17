@@ -11,7 +11,37 @@ This open-source Shiny application provides an **interactive framework for learn
 
 ## Getting Started
 
-You can run the app from [here](https://detsutut.shinyapps.io/shinyDBNet/) or from your local machine. Follow the instruction in [Development, Testing and Deployment](https://github.com/detsutut/shinyDBNet#development-testing-and-deployment) for the latter approach.
+### Running the App
+
+You can run the app from [here](https://detsutut.shinyapps.io/shinyDBNet/) or from your local machine. 
+
+For the latter approach, you first need to initialize the directory you want to use as the app container with `git init`, then you have to move into that folder and run the following command to clone the repository onto your local machine:
+```
+git clone https://github.com/detsutut/shinyDBNet.git
+```
+This will get you a running copy of the most recent version of `shinyDBNet`.
+In order to run the app, you must first open your R/RStudio console and install all of its dependencies:
+```
+install.packages(c("shiny",
+                  "shinyjs",
+                  "shinydashboard",
+                  "ggplot2",
+                  "plotly",
+                  "shinyBS",
+                  "visNetwork",
+                  "bnlearn",
+                  "gRain",
+                  "pbapply")) 
+```
+You can now run the app simply as follows:
+```
+runApp("your/path/to/main.R")
+```
+This will start a local instance on your default browser. 
+You can also start the app directly from the github repository running:
+```
+shiny::runGitHub('shinyDBNet', 'detsutut')
+```
 
 ### Learning the Bayesian Network
 
@@ -70,10 +100,6 @@ When you're done with the evidence setting, select the node you want to query an
 
 The metod used to perform this conditional probability queries it logic sampling, used to generate random samples conditional on the evidence. More information on logic sampling can be found [here](https://www.bnlearn.com/documentation/man/cpquery.html).
 
-## Development, Testing and Deployment
-
-WORK IN PROGRESS. 
-
 ## Example: the Asia dataset
 
 Here we will learn a DBN from a small synthetic data set \[Lauritzen and Spiegelhalter, 1988\] about lung diseases (tuberculosis, lung cancer or bronchitis) and visits to Asia. This example can be found on Scutari's [bnlearn webpage](https://www.bnlearn.com/documentation/man/asia.html) too.
@@ -128,7 +154,7 @@ In all the three queries, being a smoker increases the chances of having the des
 
 ## FAQ
 
-* **Why the posterior distribution of the queried node is zero?** *Logic sampling, the method currently implemented for conditional probability queries, is a form of rejection sampling. Therefore, only the obervations matching evidence (out of the n that are generated) are returned, and their number depends on the probability of evidence. If the evidence you set doesn't mach any of your observations, then the number generated samples will be zero.*
+* **Why the posterior distribution of the queried node is zero?** *Logic sampling, the method currently implemented for conditional probability queries, is a form of rejection sampling. Therefore, only the obervations matching evidence (out of the n that are generated) are returned, and their number depends on the probability of evidence. If the evidence you set doesn't mach any of your observations, then the number of generated samples will be zero.*
   
 * **After setting the evidence, the distribution of the queried node don't change. Why?** *There are several scenarios in which this may happen. First, check that the distributions you are seeing come from the `Query Results` panel and not from the `Node Details` one (where you can only see the prior distributions). If the panel you are checking is correct, then the variable(s) you set might not influence the target or your query, or their overall influence might be cancelled out by the single components. Check the [example](https://github.com/detsutut/shinyDBNet#example-the-asia-dataset) to see how it happens.*
 
