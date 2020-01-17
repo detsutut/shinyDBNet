@@ -121,12 +121,17 @@ Lauritzen and Spiegelhalter (1988) describe it as follows:
 
 “*Shortness-of-breath (dyspnoea) may be due to tuberculosis, lung cancer or bronchitis, or none of them, or more than one of them. A recent visit to Asia increases the chances of tuberculosis, while smoking is known to be a risk factor for both lung cancer and bronchitis. The results of a single chest X-ray do not discriminate between lung cancer and tuberculosis, as neither does the presence or absence of dyspnoea.*”
 
+<p align="center">
+  <img src="src/asiaDAG.png" alt="Directed Acyclig Graph representation of Lauritzen and Spiegelhalter problem" width="50%"/>
+  <p align ="center"><small>Directed Acyclig Graph (DAG) representation of Lauritzen and Spiegelhalter problem</small></p>
+</p>
+
 We might then be interested in answer some questions about how these variables interact with eachother, as for instance:
 * How does knowing that the subject took a `ChestXRay` scan in the last year influences our guessing on `Dyspnoea`?
 * How do the chances of having `Dyspnoea` change if we also know that the patient has neither `Tubercolosis` nor `Lung Cancer`?
 * How does smoking affect the probabilities of having a `Lung Cancer` or `Bronchitis`? Does it affect `Tubercolosis` as well?
 
-In order to anser these questions, we must learn the Discrete Bayesian Network first. Thus, the two files mentioned in [Getting Started](https://github.com/detsutut/shinyDBNet#getting-started) must be loaded (you can find them in the data folder).
+In order to anser these questions, we must learn the Discrete Bayesian Network. Thus, the two files mentioned in [Learning the Bayesian Network](https://github.com/detsutut/shinyDBNet/#learning-the-bayesian-network) must be loaded first (you can find them in the data folder).
 
 Once the network is learnt and rendered, we can start inferencing our model to answer the previous questions. Let's first set `ChestXRay = YES` by clicking on the node and checking the radio button.
 
