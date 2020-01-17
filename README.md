@@ -9,6 +9,19 @@ This open-source Shiny application provides an **interactive framework for learn
   <p align ="center"><small>Application preview</small></p>
 </p>
 
+## Summary
+
+1) [Getting Started](https://github.com/detsutut/shinyDBNet#getting-started)
+    * [Running the App](https://github.com/detsutut/shinyDBNet/#running-the-app)
+    * [Learning the Bayesian Network](https://github.com/detsutut/shinyDBNet/#learning-the-bayesian-network)
+    * [Loading the Bayesian Network](https://github.com/detsutut/shinyDBNet/#loading-and-downloading-the-bayesian-network)
+    * [Querying the Network](https://github.com/detsutut/shinyDBNet/#querying-the-network)
+2) [Example: the Asia dataset](https://github.com/detsutut/shinyDBNet/#example-the-asia-dataset)
+3) [Built With](https://github.com/detsutut/shinyDBNet/#built-with)
+4) [FAQ](https://github.com/detsutut/shinyDBNet/#faq)
+5) [Authors](https://github.com/detsutut/shinyDBNet/#authors)
+6) [License](https://github.com/detsutut/shinyDBNet/#license)
+
 ## Getting Started
 
 ### Running the App
