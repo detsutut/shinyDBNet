@@ -48,7 +48,7 @@ install.packages(c("shiny",
 ```
 You can now run the app simply as follows:
 ```
-runApp("your/path/to/main.R")
+shiny::runApp("your/path/to/the/app/directory")
 ```
 This will start a local instance on your default browser. 
 You can also start the app directly from the github repository running:
