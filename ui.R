@@ -102,7 +102,8 @@ fluidPage(
                    icon = icon("bug"),
                    style = "background-color:black; color:white"),
       div(id= "disclaimer", onclick = "Shiny.setInputValue('clickDebug', 0)",
-          p(style="user-select: none", id="disclaimer-content","Built with Shiny and Javascript - BETA")),
+          p(style="user-select: none", id="disclaimer-content","Powered by R-Shiny and Javascript"),
+            tags$a(href = "https://github.com/detsutut/shinyDBNet", target="_blank", "Need help?")),
       
       ##### 1.2.3 ) Hidden Controls #####
       actionButton("nodeFlag",""),

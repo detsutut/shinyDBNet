@@ -70,7 +70,7 @@ function(input, output, session) {
   #' @seealso \code{\link[bnlearn]{cpdist}} for the query data format
   queryPlot <- function(data){
     nodeInfo = getNodeInfo(nodes[which(nodes$label == input$nodeToQuery),]$id)
-    s = table(rbn(bn, n = 5000, debug = FALSE)[nodeInfo$name])
+    s = table(rbn(bn, n = 5000, debug = FALSE)[as.character(nodeInfo$name)])
     prob = s/sum(s)
     par(mfrow=c(1,2))
     barplot(prob/sum(prob),
