@@ -5,7 +5,7 @@ This open-source Shiny application provides an **interactive framework for learn
 *This documentation assumes that the reader is already familiar with of Bayesian Networks. If not so, a gentle introduction to the main concepts of Bayesian Networks can be found [here](https://machinelearningmastery.com/introduction-to-bayesian-belief-networks/), along with some further readings.*
 
 <p align="center">
-  <img src="src/screenshot.png" alt="Application preview" width="98%"/>
+  <img src="src/screenshot.png" alt="Application preview" width="100%"/>
   <p align ="center"><small>Application preview</small></p>
 </p>
 
