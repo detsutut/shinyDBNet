@@ -53,10 +53,19 @@ function(input, output, session) {
         s = table(rbn(bn, n = 5000, debug = FALSE)[as.character(nodeName)])
         prob = s/sum(s)
       }
-      barplot(prob/sum(prob),
+      labels = names(prob)
+      srt = 0
+      offset = 0
+      if(length(labels)>3) {
+        srt = 25
+        offset = 0.1
+      }
+      x<-barplot(prob/sum(prob),
               col = rainbow(n = length(prob), s = 0.5),
-              main = toupper(nodeName),
+              main = toupper(nodeName), xaxt='n',
               ylim=c(0,1))
+      text(x, prob+0.05, paste(round(prob*100), "%", sep="") ,cex=1, font = 2, col = rainbow(n = length(prob), s = 0.5)) 
+      text(x=x-offset, y=-0.1, labels = names(prob), cex=1, xpd=TRUE, srt=srt)
     }
     hideLoading(modal=TRUE)
   }
@@ -73,14 +82,27 @@ function(input, output, session) {
     s = table(rbn(bn, n = 5000, debug = FALSE)[as.character(nodeInfo$name)])
     prob = s/sum(s)
     par(mfrow=c(1,2))
-    barplot(prob/sum(prob),
-            col = rainbow(n = length(prob), s = 0.5),
-            ylim=c(0,1),
+    labels = names(prob)
+    srt = 0
+    offset = 0
+    if(length(labels)>3) {
+      srt = 25
+      offset = 0.1
+    }
+    output = prob/sum(prob)
+    x<-barplot(output,
+            col = rainbow(n = length(output), s = 0.5),
+            ylim=c(0,1), xaxt='n',
             main = paste("P(",toupper(input$nodeToQuery),")"))
-    barplot(data/sum(data),
-            col = rainbow(n = length(data), s = 0.5),
-            ylim=c(0,1),
+    text(x, output+0.05, paste(round(output*100), "%", sep="") ,cex=1, font = 2, col = rainbow(n = length(output), s = 0.5)) 
+    text(x=x-offset, y=-0.1, labels = names(output), cex=1, xpd=TRUE, srt=srt)
+    output = data/sum(data)
+    x2<-barplot(output,
+            col = rainbow(n = length(output), s = 0.5),
+            ylim=c(0,1), xaxt='n',
             main = paste("P(",toupper(input$nodeToQuery),"| EVIDENCE )"))
+    text(x2, output+0.05, paste(round(output*100), "%", sep="") ,cex=1, font = 2, col = rainbow(n = length(output), s = 0.5)) 
+    text(x=x2-offset, y=-0.1, labels = names(output), cex=1, xpd=TRUE, srt=srt)
     hideLoading(query = TRUE)
   }
   

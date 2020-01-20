@@ -10,6 +10,7 @@ library("visNetwork")
 library("bnlearn")                                          #bayesian networks handler
 library("gRain")                                            #bayesian networks visualizer
 library("pbapply")                                          #adds progress bars to the apply family
+library("RColorBrewer")
 
 source("scripts/utilities.R")                               #load utilities
 
