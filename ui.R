@@ -102,8 +102,11 @@ fluidPage(
                    icon = icon("bug"),
                    style = "background-color:black; color:white"),
       div(id= "disclaimer", onclick = "Shiny.setInputValue('clickDebug', 0)",
-          p(style="user-select: none", id="disclaimer-content","Powered by R-Shiny and Javascript"),
-            tags$a(href = "https://github.com/detsutut/shinyDBNet", target="_blank", "Need help?")),
+            tags$a(href = "https://github.com/detsutut/shinyDBNet", target="_blank", "Need help?"),
+          br(),br(),br(),br(),
+          p(style="user-select: none", id="disclaimer-content","Powered by"),
+          tags$a(href="https://www.amsterdamumc.nl/", target="_blank", img(class="logo", src = "zonmw.png", width = "50%")),
+          ),
       
       ##### 1.2.3 ) Hidden Controls #####
       actionButton("nodeFlag",""),
@@ -127,6 +130,7 @@ fluidPage(
         top = 70,
         style = "background: rgba(150,150,180,0.2); padding: 10px; border-radius:15px"
       ),
+      div(id= "divimage", a(href="https://www.amsterdamumc.nl/",img(class="logo", src = "umc.png"))),
       
       ## 1.3.2 ) Modals #####
       bsModal("nodeModal", 
