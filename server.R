@@ -50,7 +50,11 @@ function(input, output, session) {
         names(prob) = choices
         prob[nodeInfo$evidence]=1
       } else {
-        s = table(rbn(bn, n = 5000, debug = FALSE)[as.character(nodeName)])
+        s = table(rbn(bn, n = 5000, debug = FALSE)[as.character(nodeInfo$name)])
+        for(i in 1:29){
+          s = rbind(s,table(rbn(bn, n = 5000, debug = FALSE)[as.character(nodeInfo$name)]))
+        }
+        s = colMeans(s)
         prob = s/sum(s)
       }
       labels = names(prob)
@@ -80,6 +84,10 @@ function(input, output, session) {
   queryPlot <- function(data){
     nodeInfo = getNodeInfo(nodes[which(nodes$label == input$nodeToQuery),]$id)
     s = table(rbn(bn, n = 5000, debug = FALSE)[as.character(nodeInfo$name)])
+    for(i in 1:29){
+      s = rbind(s,table(rbn(bn, n = 5000, debug = FALSE)[as.character(nodeInfo$name)]))
+    }
+    s = colMeans(s)
     prob = s/sum(s)
     par(mfrow=c(1,2))
     labels = names(prob)
@@ -286,8 +294,13 @@ function(input, output, session) {
                                   sep = "", collapse = " & ")
       queryNodeString = paste("'", input$nodeToQuery, "'", sep = "")                   #query node as a string
       queryData = eval(parse(text = paste("table(cpdist(bn, ", queryNodeString, ", ",  #merge together and run the query
-                                          queryEvidenceString, "))", sep = ""))) 
-      output$queryPlot <- renderPlot({queryPlot(data= queryData)})
+                                               queryEvidenceString, "))", sep = ""))) 
+      #for loop to get more stable results
+      for (i in 1:30){
+        queryData = rbind(queryData,eval(parse(text = paste("table(cpdist(bn, ", queryNodeString, ", ",  #merge together and run the query
+                                           queryEvidenceString, "))", sep = ""))))
+      }
+      output$queryPlot <- renderPlot({queryPlot(data= colMeans(queryData))})
       output$evidenceTable <- renderTable(cbind(Nodes=toupper(evidenceNodes),Evidence=evidenceStates),width = '100%', align = 'c')
     }
   })
