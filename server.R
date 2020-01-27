@@ -364,20 +364,28 @@ function(input, output, session) {
   #' data = read.csv("dataset.csv")
   #' bn = createBN(nodes,edges,data)
   createBN = function(nodes,edges,data){
-    print("creating bn...")
-    showLoading()
-    edges_n = edges
-    for(row in 1:nrow(edges_n)) {
-      for(col in 1:ncol(edges_n)) {
-        edges_n[row, col] = nodes[which(nodes$id==edges[row, col]),]$label
-      }
-    }
-    dag = dagtools.new(nodelist = nodes$label) %>%
-      dagtools.fill(arcs_matrix = edges_n)
-    bn = bntools.fit(dag = dag,data = data)
-    attr(bn,"dag") = dag
+    bn = try({
+          print("creating bn...")
+          showLoading()
+          edges_n = edges
+          for(row in 1:nrow(edges_n)) {
+            for(col in 1:ncol(edges_n)) {
+              edges_n[row, col] = nodes[which(nodes$id==edges[row, col]),]$label
+            }
+          }
+          dag= dagtools.new(nodelist = nodes$label) %>%
+               dagtools.fill(arcs_matrix = edges_n)
+          b = bntools.fit(dag = dag,data = data)
+          attr(b,"dag") = dag
+          b
+        })
     hideLoading()
-    return(bn)
+    if(inherits(bn, "try-error")) {
+      showNotification("Ooops! Something went wrong! Please check the format of your input files and the consistency of your variables names. Remember also that closed loops are not allowed in Bayesian Networks!", duration = 15, type = "error")
+      return(NULL)
+    } else {
+      return(bn)
+    }
   }
   
   #' Force rendered network refresh
