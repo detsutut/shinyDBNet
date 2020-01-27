@@ -32,8 +32,8 @@ source("scripts/utilities.R")                               #load utilities
 
 ##### 0.2 ) Custom Inputs #####
 
-HTMLDownloadButton <- function(outputId, label = "Download", style){
-  tags$a(id = outputId, class = "btn btn-default shiny-download-link", href = "", icon("globe"),
+HTMLDownloadButton <- function(outputId, label = "Download", style, title = ""){
+  tags$a(id = outputId, title = title, class = "btn btn-default shiny-download-link", href = "", icon("image"),
          target = "_blank", download = NA, NULL, label, style = style)
 }
 
@@ -102,10 +102,8 @@ fluidPage(
                    icon = icon("bug"),
                    style = "background-color:black; color:white"),
       div(id= "disclaimer", onclick = "Shiny.setInputValue('clickDebug', 0)",
-            tags$a(href = "https://github.com/detsutut/shinyDBNet", target="_blank", "Need help?"),
-          br(),br(),br(),br(),
-          p(style="user-select: none", id="disclaimer-content","Powered by"),
-          tags$a(href="https://www.amsterdamumc.nl/", target="_blank", img(class="logo", src = "zonmw.png", width = "50%")),
+          p(style="user-select: none; color: #C2BCB7", id="disclaimer-content","Founded by"),
+          tags$a(href="https://www.zonmw.nl/nl/", target="_blank", img(class="logo", src = "zonmw.png", width = "50%")),
           ),
       
       ##### 1.2.3 ) Hidden Controls #####
@@ -123,9 +121,10 @@ fluidPage(
       div(id= "loading", class = "loading",'Loading&#8230;'),
       visNetworkOutput("network", height = NULL, width = "110%"),
       fixedPanel(
-        actionButton(inputId = "uploadBN",icon = icon("upload"), label = "upload BN",style = "background-color:#367FA9; color:white"),
-        downloadButton(outputId ="downloadBN", label = "download BN",style = "background-color:#367FA9; color:white"),
-        HTMLDownloadButton(outputId ="downloadHTML", label = "HTML",style = "background-color:#367FA9; color:white"),
+        actionButton(inputId = "uploadBN",icon = icon("upload"), title="upload Bayesian Network", label = "",style = "background-color:#367FA9; color:white"),
+        downloadButton(outputId ="downloadBN", title="download Bayesian Network", label = "",style = "background-color:#367FA9; color:white"),
+        HTMLDownloadButton(outputId ="downloadHTML", title="Open image as HTML", label = "",style = "background-color:#367FA9; color:white"),
+        actionButton(inputId = "help",icon = icon("info"), title = "Need help?", label = "",style = "background-color:#367FA9; color:white"),
         right = 50,
         top = 70,
         style = "background: rgba(150,150,180,0.2); padding: 10px; border-radius:15px"

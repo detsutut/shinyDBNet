@@ -321,6 +321,10 @@ function(input, output, session) {
     runjs("document.getElementById('bnUpload').click();")
   })
   
+  observeEvent(input$help,{
+    runjs("window.open('https://github.com/detsutut/shinyDBNet')")
+  })
+  
   observeEvent(input$bnUpload,{
     if(!is.null(input$bnUpload)) {
       showLoading()
