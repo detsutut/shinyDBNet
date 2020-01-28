@@ -522,6 +522,9 @@ function(input, output, session) {
   #' Load a pretrained Bayesian Network, stored on the server.
   #' @return the bayesian network object
   loadPreTrainedBN = function(file = "data/bn_car_insurance"){
+    bn_temp = bn
+    nodes_temp = nodes
+    edges_temp = edges
     trySection = try({
       load(file)
       bn<<-bn
@@ -532,8 +535,12 @@ function(input, output, session) {
     })
     if(inherits(trySection, "try-error")) {
       showNotification("The network can\'t be loaded. Please check the input again.", duration = 15, type = "error")
-      return(NULL)
+      nodes<<-nodes_temp
+      edges<<-edges_temp
+      bn<<-bn_temp
+      return(bn)
     } else {
+      checked$data <<- TRUE
       return(bn)
     }
   }
