@@ -10,7 +10,7 @@ function(input, output, session) {
   hide('loading')
   hide("multiPurposeButton")
   hide("bnUpload")
-  checked = list(nodes=FALSE,edges=FALSE,data=FALSE)
+  checked = list(edges=FALSE,data=FALSE)
   nodes = NULL
   edges = NULL
   data = NULL
@@ -51,7 +51,7 @@ function(input, output, session) {
         prob[nodeInfo$evidence]=1
       } else {
         s = table(rbn(bn, n = 5000, debug = FALSE)[as.character(nodeInfo$name)])
-        for(i in 1:29){
+        for(i in 1:4){
           s = rbind(s,table(rbn(bn, n = 5000, debug = FALSE)[as.character(nodeInfo$name)]))
         }
         s = colMeans(s)
@@ -84,7 +84,7 @@ function(input, output, session) {
   queryPlot <- function(data){
     nodeInfo = getNodeInfo(nodes[which(nodes$label == input$nodeToQuery),]$id)
     s = table(rbn(bn, n = 5000, debug = FALSE)[as.character(nodeInfo$name)])
-    for(i in 1:29){
+    for(i in 1:4){
       s = rbind(s,table(rbn(bn, n = 5000, debug = FALSE)[as.character(nodeInfo$name)]))
     }
     s = colMeans(s)
@@ -154,7 +154,7 @@ function(input, output, session) {
   #' Toggle the modal panel, update values of radio buttons with the values of the selected node and plot the distribution
   #' @seealso \code{\link{toggleModal}}, \code{\link{updateRadios}}, \code{\link{nodePlot}}, \code{\link{getNodeInfo}}
   observeEvent(input$dblClickFlag,{
-    if(input$dblClickFlag == 0 && !is.null(input$current_node_id)) {
+    if(input$dblClickFlag == 0 && !is.null(input$current_node_id) && checked$data) {
       showLoading(modal=TRUE)
       nodeInfo = getNodeInfo(input$current_node_id)
       toggleModal(session, 'nodeModal', toggle = 'toggle')
@@ -184,22 +184,27 @@ function(input, output, session) {
   #' Update the selected node in the sidebar's query menu
   #' @seealso \code{\link{getNodeInfo}}, \code{\link{updateEvidence}}
   observeEvent(input$evidenceMenuButton,{
-    lapply(1:length(nodes$id), function(i){
-      id = nodes[i,]$id
-      if(!evidenceMenuUiInjected){
-        isolate({
-          nodeInfo = getNodeInfo(id)
-          insertUI(
-            where = "beforeBegin",
-            selector = "#evidenceControls",
-            ui = tags$div(id="whocares",radioButtons(paste0("evidence_",id), label = toupper(nodeInfo$name), choices = nodeInfo$choices))
-          )
-        })}
-      observeEvent(input[[paste0("evidence_",id)]],{
-        updateEvidence(id,input[[paste0("evidence_",id)]])
+    if(checked$data){
+      lapply(1:length(nodes$id), function(i){
+        id = nodes[i,]$id
+        if(!evidenceMenuUiInjected){
+          isolate({
+            nodeInfo = getNodeInfo(id)
+            insertUI(
+              where = "beforeBegin",
+              selector = "#evidenceControls",
+              ui = tags$div(id="whocares",radioButtons(paste0("evidence_",id), label = toupper(nodeInfo$name), choices = nodeInfo$choices))
+            )
+          })}
+        observeEvent(input[[paste0("evidence_",id)]],{
+          updateEvidence(id,input[[paste0("evidence_",id)]])
+        })
       })
-    })
-    evidenceMenuUiInjected <<- TRUE
+      evidenceMenuUiInjected <<- TRUE
+    }
+    else {
+      showNotification("The newtowrk is not fully-defined. Load the data or a pre-trained network first.", type = "warning")
+    }
   })
   
   #' When clickDebug is clicked:
@@ -250,14 +255,30 @@ function(input, output, session) {
   #' if we already uploaded file1, we can render the network
   #' @seealso \code{\link{renderVisNetwork}} \code{\link{isRenderable}}
   observeEvent(input$edgesFile,{
+    temp_edges = edges
+    temp_nodes = nodes
     if(!is.null(input$edgesFile)) {
-      edges<<-read.csv(file = input$edgesFile$datapath,stringsAsFactors=FALSE)
-      nodes<<-getNodes(edges)
-      edges<<-parseEdges(edges)
+      trySection = try({
+        edges<<-read.csv(file = input$edgesFile$datapath,stringsAsFactors=FALSE)
+        nodes<<-getNodes(edges)
+        edges<<-parseEdges(edges)
+      })
+      if(inherits(trySection, "try-error")) {
+        showNotification("Ooops! Something went wrong! Please check the format of your input file.", duration = 15, type = "error")
+        edges<<-temp_edges
+        nodes<<-temp_nodes
+        return(NULL)
+      }
       updateSelectInput(session,"nodeToQuery",choices = nodes$label)
       output$network <- renderVisNetwork({visNetworkRenderer()})
+      checked$edges <<- TRUE
     }
-    checked$edges <<- !is.null(input$edgesFile)
+    else checked$edges <<- FALSE
+    if(checked$edges & checked$data) {
+      bn<<-createBN(nodes,edges,data)
+      updateCollapse(session,id = "collapseLoad", close = "Learn The Network")
+      shinyjs::runjs("tour.start(true);tour.goTo(6);")
+    }
   })
   
   #' When file3 is uploaded:
@@ -265,10 +286,20 @@ function(input, output, session) {
   #' if we already uploaded file1 and file2, we can now query the network
   #' @seealso \code{\link{renderVisNetwork}} \code{\link{isQueriable}}
   observeEvent(input$dataFile,{
+    temp_data = data
     if(!is.null(input$dataFile)) {
-      data<<-read.csv(file = input$dataFile$datapath,stringsAsFactors=TRUE)
+      trySection = try({
+        data<<-read.csv(file = input$dataFile$datapath,stringsAsFactors=TRUE)
+        if(ncol(data)<2) stop()
+      })
+      if(inherits(trySection, "try-error")) {
+        showNotification("Ooops! Something went wrong! Please check the format of your input file.", duration = 15, type = "error")
+        data<<-temp_data
+        return(NULL)
+      }
+      checked$data<<-TRUE
     }
-    if(checked$edges) {
+    if(checked$edges & checked$data) {
       bn<<-createBN(nodes,edges,data)
       updateCollapse(session,id = "collapseLoad", close = "Learn The Network")
       shinyjs::runjs("tour.start(true);tour.goTo(6);")
@@ -280,14 +311,19 @@ function(input, output, session) {
   #' if we already uploaded file1 and file2, we can now query the network
   #' @seealso \code{\link{renderVisNetwork}} \code{\link{isQueriable}}    
   observeEvent(input$query,{
-    showLoading(query = TRUE)
     evidenceIndices = which(nodes$group=="evidence")  #get the indices of the nodes where the evidence has been set
     evidenceNodes = nodes$label[evidenceIndices]      #get the names of the evidence nodes 
     evidenceStates = nodes$evidence[evidenceIndices]  #get the values of the evidence nodes
+    if(!checked$data){
+      showNotification("The newtowrk is not fully-defined. Load the data or a pre-trained network first.", type = "warning")
+      toggleModal(session, 'queryModal', toggle = 'toggle')
+      return(NULL)
+    }
     if(length(evidenceIndices)==0){
-      showNotification("No evidence set!")
+      showNotification("No evidence set!", type = "warning")
       toggleModal(session, 'queryModal', toggle = 'toggle')
     } else {
+      showLoading(query = TRUE)
       #dynamic querying is a bit tricky for cpdist. However, this approach has been suggested by the author of the package himself. 
       queryEvidenceString = paste("(", evidenceNodes, " == '",                         #build a set of node-value couples as a string
                                   sapply(evidenceStates, as.character), "')",
@@ -296,7 +332,7 @@ function(input, output, session) {
       queryData = eval(parse(text = paste("table(cpdist(bn, ", queryNodeString, ", ",  #merge together and run the query
                                                queryEvidenceString, "))", sep = ""))) 
       #for loop to get more stable results
-      for (i in 1:30){
+      for (i in 1:4){
         queryData = rbind(queryData,eval(parse(text = paste("table(cpdist(bn, ", queryNodeString, ", ",  #merge together and run the query
                                            queryEvidenceString, "))", sep = ""))))
       }
@@ -486,13 +522,20 @@ function(input, output, session) {
   #' Load a pretrained Bayesian Network, stored on the server.
   #' @return the bayesian network object
   loadPreTrainedBN = function(file = "data/bn_car_insurance"){
-    load(file)
-    bn<<-bn
-    dag = attr(bn,"dag")
-    e = as.data.frame(dag$arcs)
-    nodes<<-getNodes(e)
-    edges<<-parseEdges(e)
-    return(bn)
+    trySection = try({
+      load(file)
+      bn<<-bn
+      dag = attr(bn,"dag")
+      e = as.data.frame(dag$arcs)
+      nodes<<-getNodes(e)
+      edges<<-parseEdges(e)
+    })
+    if(inherits(trySection, "try-error")) {
+      showNotification("The network can\'t be loaded. Please check the input again.", duration = 15, type = "error")
+      return(NULL)
+    } else {
+      return(bn)
+    }
   }
   
   #' Retrieve the nodes table from the edge table
