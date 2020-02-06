@@ -10,6 +10,7 @@ library("visNetwork")
 library("bnlearn")                                          #bayesian networks handler
 library("gRain")                                            #bayesian networks visualizer
 library("pbapply")                                          #adds progress bars to the apply family
+library("DT")
 
 source("scripts/utilities.R")                               #load utilities
 
@@ -75,7 +76,7 @@ fluidPage(
                  bsCollapsePanel("Network Inference",
                                  div(id="querySection",
                                      selectInput(inputId = "nodeToQuery", 
-                                                 label = "Node to query", 
+                                                 label = "Selected node", 
                                                  choices = c(""),
                                                  selected = NULL, 
                                                  multiple = FALSE,
@@ -86,16 +87,22 @@ fluidPage(
                                                   label = "Query", 
                                                   width = "87%", 
                                                   icon = icon("brain"),
-                                                  style = "background-color:orange; color:white"))
+                                                  style = "background-color:orange; color:white"),
+                                     actionButton(inputId = "editCPT", 
+                                                  label = "edit CPT",
+                                                  icon = icon("edit"),
+                                                  width = "87%", 
+                                                  style = "background-color:#4CAF50; color:white"),
+                                     actionButton(inputId = "evidenceMenuButton", 
+                                                  label = " Evidence Panel", 
+                                                  width = "87%", 
+                                                  icon = icon("clipboard-list"),
+                                                  style = "background-color:#4CAF50; color:white")
+                                     )
+                                 
                  )
       ),
-      hr(),
-      actionButton(inputId = "evidenceMenuButton", 
-                   label = " Evidence Panel", 
-                   width = "87%", 
-                   icon = icon("clipboard-list"),
-                   style = "background-color:#4CAF50; color:white"),
-      hr(),   
+      hr(),  
       actionButton(inputId = "multiPurposeButton", 
                    label = "Multi-purpose Debug Button", 
                    width = "87%", 
@@ -142,8 +149,13 @@ fluidPage(
       bsModal("evidenceMenu", 
               "Evidence Menu", 
               "evidenceMenuButton",
-              size = "big",
+              size = "small",
               uiOutput("evidenceControls")),
+      bsModal("cptModal", 
+              "CPT Editor", 
+              "editCPT",
+              size = "big",
+              DT::dataTableOutput("mytable")),
       bsModal("queryModal", 
               "Query Results", 
               "query",

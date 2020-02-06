@@ -329,4 +329,35 @@ dagtools.plot = function(dag, title = c("",""), compareWith = NULL){
   return(output)
 }
 
+#' Retrieve the nodes table from the edge table
+#' @return the node table
+getNodes = function(edges){
+  label = unique(unlist(edges))
+  id = 1:length(label)
+  group = rep(NA,length(label))
+  evidence =rep("no_evidence",length(label))
+  nodes = data.frame(id,label,group,evidence,stringsAsFactors = FALSE)
+  return(nodes)
+}
 
+#' Parse the edges table to be processed by the network renderer
+#' @return the parsed edge table
+parseEdges = function(edges, nodes){
+  edges_parsed = edges
+  for(i in 1:nrow(nodes)){
+    edges_parsed = data.frame(lapply(edges_parsed, function(x) {gsub(nodes$label[i], nodes$id[i], x)}),stringsAsFactors = FALSE)
+  }
+  return(edges_parsed)
+}
+
+#' Parse the edges table (from ids to strings) to be processed by bnlearn
+#' @return the parsed edge table
+parseEdges2 = function(edges, nodes){
+  edges_n = edges
+  for(row in 1:nrow(edges_n)) {
+    for(col in 1:ncol(edges_n)) {
+      edges_n[row, col] = nodes[which(nodes$id==edges[row, col]),]$label
+    }
+  }
+  return(edges_n)
+}

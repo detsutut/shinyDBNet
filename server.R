@@ -207,6 +207,33 @@ function(input, output, session) {
     }
   })
   
+  observeEvent(input$editCPT,{
+    if(!is.null(input$current_node_id)){
+      nodeInfo = getNodeInfo(input$current_node_id)
+      nodeName = nodeInfo$name
+      table = as.data.frame(bn[[as.character(nodeName)]]$prob)
+      table$Freq = round(table$Freq,digits = 2)
+      output$mytable = DT::renderDataTable({table}, editable = NULL)
+      #output$mytable = DT::renderDataTable({table}, editable = list(target = 'cell', disable = list(columns = seq(ncol(table)-1))))
+    }
+  })
+  
+  proxy = dataTableProxy('mytable')
+  
+  observeEvent(input$mytable_cell_edit, {
+    nodeInfo = getNodeInfo(input$current_node_id)
+    nodeName = nodeInfo$name
+    a = bn[[as.character(nodeName)]]$prob
+    table = as.data.frame(a)
+    info = input$mytable_cell_edit
+    str(info)
+    i = info$row
+    j = info$col
+    v = info$value
+    row = table[i,]
+    a[row$Var1]=as.numeric(v)
+  })
+  
   #' When clickDebug is clicked:
   #' increment the counter and activate/deactivate debug mode when counter goes up to 10
   #' The 'debug' variable keeps track of the debug state on the R side, 'debugFlag' does the same on the JavaScript side
@@ -544,26 +571,4 @@ function(input, output, session) {
       return(bn)
     }
   }
-  
-  #' Retrieve the nodes table from the edge table
-  #' @return the node table
-  getNodes = function(edges){
-    label = unique(unlist(edges))
-    id = 1:length(label)
-    group = rep(NA,length(label))
-    evidence =rep("no_evidence",length(label))
-    nodes = data.frame(id,label,group,evidence,stringsAsFactors = FALSE)
-    return(nodes)
-  }
-  
-  #' Parse the edges table to be processed by the network renderer
-  #' @return the parsed edge table
-  parseEdges = function(edges){
-    edges_parsed = edges
-    for(i in 1:nrow(nodes)){
-      edges_parsed = data.frame(lapply(edges_parsed, function(x) {gsub(nodes$label[i], nodes$id[i], x)}),stringsAsFactors = FALSE)
-    }
-    return(edges_parsed)
-  }
-  
 }

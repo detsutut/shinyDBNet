@@ -1,3 +1,11 @@
+.modal-dialog.big {
+  width: 75%;
+}
+
+.modal-dialog.modal-sm {
+  width: 35%;
+}
+
 #blue-item {
   color:blue;
 }
