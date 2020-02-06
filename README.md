@@ -198,8 +198,6 @@ We thank [ZonMw](https://www.zonmw.nl/nl/) for funding, along with the [UMC](htt
 <p align="center">
   <img src="www/zonmw.png" alt="ZonMw" width="30%"/>
 </p>
-<br/>
-<br/>
 <p align="center">
   <img src="www/umc.png" alt="ZonMw" width="30%"/>
 </p>
