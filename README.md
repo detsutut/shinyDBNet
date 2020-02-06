@@ -178,9 +178,22 @@ In all the three queries, being a smoker increases the chances of having the des
 
 * **Querying the same node multiple times, under the same evidence set, gives me different distributions. Why?** *Queries are performed using approximate inference methods based on Monte-Carlo Particle Filters. Some variability in the results is threfore expected since they are Monte Carlo estimates. If the variability in the results is too high, then your evidence is likely to have a very low probability (i.e. very complex query) and you need to generate more particles to obtain a reasonably precise estimate of that conditional probability. Unfortunately, the number of particles to generate is not user-defined at the moment.*
 
+## Future Developments
+
+* Make CPTs manually editable
+* Add support for latent variables
+* Exact inference for relatively simple networks
+* Nodes and arcs interactive add/removal
+* DAG import from DAGitty
+* Detect cycles in the DAGs and propose possible trimmings to address the problem
+* Data-driven arcs suggestions
+
 ## Authors
 
 * **Tommaso Buonocore** - *Author and Repository Maintainer* - [GitHub](https://github.com/detsutut), [LinkedIn](https://www.linkedin.com/in/tbuonocore/)
+
+## Acknowledgements
+We thank ZonMw for funding, along with the UMC's departments of Geriatrics and Medical Informatics and the ADFICE-IT/CAREFREE teams.
 
 ## License
 
