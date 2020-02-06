@@ -193,7 +193,16 @@ In all the three queries, being a smoker increases the chances of having the des
 * **Tommaso Buonocore** - *Author and Repository Maintainer* - [GitHub](https://github.com/detsutut), [LinkedIn](https://www.linkedin.com/in/tbuonocore/)
 
 ## Acknowledgements
-We thank ZonMw for funding, along with the UMC's departments of Geriatrics and Medical Informatics and the ADFICE-IT/CAREFREE teams.
+We thank [ZonMw](https://www.zonmw.nl/nl/) for funding, along with the [UMC](https://www.amsterdamumc.nl/)'s departments of Geriatrics and Medical Informatics and the ADFICE-IT/CAREFREE teams.
+
+<p align="center">
+  <img src="www/zonmw.png" alt="ZonMw" width="30%"/>
+</p>
+<br/>
+<br/>
+<p align="center">
+  <img src="www/umc.png" alt="ZonMw" width="30%"/>
+</p>
 
 ## License
 
