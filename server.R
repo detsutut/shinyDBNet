@@ -126,7 +126,7 @@ function(input, output, session) {
   #' queryPlot(data= queryData)
   #' @seealso \code{\link[visNetwork]} for a detailed description of the rendering process
   visNetworkRenderer = function(){
-    visNetwork(nodes, edges) %>%
+    visNetwork(nodes, parseEdges(edges,nodes)) %>%
       visNodes(shape = "ellipse") %>%
       visEdges(arrows = "to") %>%
       visOptions(collapse = FALSE, highlightNearest = FALSE) %>%
@@ -289,7 +289,6 @@ function(input, output, session) {
       trySection = try({
         edges<<-read.csv(file = input$edgesFile$datapath,stringsAsFactors=FALSE)
         nodes<<-getNodes(edges)
-        edges<<-parseEdges(edges,nodes)
       })
       if(inherits(trySection, "try-error")) {
         showNotification("Ooops! Something went wrong! Please check the format of your input file.", duration = 15, type = "error")
@@ -329,6 +328,7 @@ function(input, output, session) {
     }
     if(checked$edges & checked$data) {
       bn<<-createBN(nodes,edges,data)
+      suggested_dag = learnDagFromData(nodes,edges,data)
       updateCollapse(session,id = "collapseLoad", close = "Learn The Network")
       shinyjs::runjs("tour.start(true);tour.goTo(6);")
     }
@@ -431,14 +431,8 @@ function(input, output, session) {
     bn = try({
           print("creating bn...")
           showLoading()
-          edges_n = edges
-          for(row in 1:nrow(edges_n)) {
-            for(col in 1:ncol(edges_n)) {
-              edges_n[row, col] = nodes[which(nodes$id==edges[row, col]),]$label
-            }
-          }
           dag= dagtools.new(nodelist = nodes$label) %>%
-               dagtools.fill(arcs_matrix = edges_n)
+               dagtools.fill(arcs_matrix = edges)
           b = bntools.fit(dag = dag,data = data)
           attr(b,"dag") = dag
           b
@@ -557,9 +551,8 @@ function(input, output, session) {
       load(file)
       bn<<-bn
       dag = attr(bn,"dag")
-      e = as.data.frame(dag$arcs)
-      nodes<<-getNodes(e)
-      edges<<-parseEdges(e,nodes)
+      edges<<- as.data.frame(dag$arcs)
+      nodes<<-getNodes(edges)
     })
     if(inherits(trySection, "try-error")) {
       showNotification("The network can\'t be loaded. Please check the input again.", duration = 15, type = "error")
@@ -572,4 +565,14 @@ function(input, output, session) {
       return(bn)
     }
   }
+  
+  #learnDagFromData
+  #Work In progress
+  learnDagFromData = function(nodes,edges,data){
+    # browser()
+    # bootstrappedNets = boot.strength(data, R = 5, algorithm = "tabu",algorithm.args = list(whitelist = edges))
+    # dag_learned = averaged.network(bootstrappedNets)
+    # setdiff(dag$arcs,dag_learned$arcs)
+  }
+  
 }
