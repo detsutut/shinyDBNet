@@ -53,7 +53,7 @@ fluidPage(
   dashboardPage(
     title="ShinyDBNet",
     ##### 1.1 ) Header #####
-    dashboardHeader(title = p("ShinyDBNet",tags$sup("Beta")),titleWidth = 350),
+    dashboardHeader(title = p(tags$img(src="bn_w.png", height ="25px"),"ShinyDBNet",tags$sub(tags$i("ADFICE-IT"))),titleWidth = 350),
     
     ##### 1.2 ) Sidebar #####
     dashboardSidebar(
@@ -132,8 +132,8 @@ fluidPage(
         downloadButton(outputId ="downloadBN", title="download Bayesian Network", label = "",style = "background-color:#367FA9; color:white"),
         HTMLDownloadButton(outputId ="downloadHTML", title="Open image as HTML", label = "",style = "background-color:#367FA9; color:white"),
         actionButton(inputId = "help",icon = icon("info"), title = "Need help?", label = "",style = "background-color:#367FA9; color:white"),
-        right = 50,
-        top = 70,
+        right = 40,
+        top = 60,
         style = "background: rgba(150,150,180,0.2); padding: 10px; border-radius:15px"
       ),
       div(id= "divimage", a(href="https://www.amsterdamumc.nl/",img(class="logo", src = "umc.png"))),
