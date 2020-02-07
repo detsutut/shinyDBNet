@@ -3,6 +3,7 @@
 function(input, output, session) {
   
   ##### 2.1 ) On Server Start #####
+  #updateCollapse(session,id = "collapseQuery", close = "Network Inference")
   hide("nodeFlag")
   hide("dblClickFlag")
   hide("clickFlag")
@@ -207,12 +208,12 @@ function(input, output, session) {
     }
   })
   
-  observeEvent(input$editCPT,{
+  observeEvent(input$viewCPT,{
     if(!is.null(input$current_node_id)){
       nodeInfo = getNodeInfo(input$current_node_id)
       nodeName = nodeInfo$name
       table = as.data.frame(bn[[as.character(nodeName)]]$prob)
-      table$Freq = round(table$Freq,digits = 2)
+      table$Freq = paste0(round(table$Freq*100,digits = 1),"%")
       output$mytable = DT::renderDataTable({table}, editable = NULL)
       #output$mytable = DT::renderDataTable({table}, editable = list(target = 'cell', disable = list(columns = seq(ncol(table)-1))))
     }
@@ -549,7 +550,6 @@ function(input, output, session) {
   #' Load a pretrained Bayesian Network, stored on the server.
   #' @return the bayesian network object
   loadPreTrainedBN = function(file = "data/bn_car_insurance"){
-    browser()
     bn_temp = bn
     nodes_temp = nodes
     edges_temp = edges

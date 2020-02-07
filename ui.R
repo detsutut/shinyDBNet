@@ -1,4 +1,5 @@
 ############## 0 ) INIT ##############
+version = "1.0.1"
 
 library("shiny")
 library("shinyjs")
@@ -70,7 +71,7 @@ fluidPage(
                                               width = "86%")
                  )
       ),
-      hr(),
+      hr(style="border-top-color:rgba(0,0,0,.1"),
       ##### 1.2.2 ) Query #####
       bsCollapse(id = "collapseQuery", open = "Network Inference",
                  bsCollapsePanel("Network Inference",
@@ -87,22 +88,22 @@ fluidPage(
                                                   label = "Query", 
                                                   width = "87%", 
                                                   icon = icon("brain"),
-                                                  style = "background-color:orange; color:white"),
+                                                  style = "background-color:#1cb7a0; color:white"),
                                      actionButton(inputId = "viewCPT", 
                                                   label = "CPT Viewer",
                                                   icon = icon("edit"),
                                                   width = "87%", 
-                                                  style = "background-color:#4CAF50; color:white"),
+                                                  style = "background-color:#63adfc; color:white"),
                                      actionButton(inputId = "evidenceMenuButton", 
                                                   label = " Evidence Panel", 
                                                   width = "87%", 
                                                   icon = icon("clipboard-list"),
-                                                  style = "background-color:#4CAF50; color:white")
+                                                  style = "background-color:#fd6f71; color:white")
                                      )
                                  
                  )
       ),
-      hr(),  
+      hr(style="border-top-color:rgba(0,0,0,.1"), 
       actionButton(inputId = "multiPurposeButton", 
                    label = "Multi-purpose Debug Button", 
                    width = "87%", 
@@ -112,6 +113,8 @@ fluidPage(
           p(style="user-select: none; color: #C2BCB7", id="disclaimer-content","Funded by"),
           tags$a(href="https://www.zonmw.nl/nl/", target="_blank", img(class="logo", src = "zonmw.png", width = "50%")),
           ),
+      hr(style="border-top-color:rgba(0,0,0,.1"),
+      div(p(style="user-select: none; color: #C2BCB7; text-align:center",paste0("Software version ",version))),
       
       ##### 1.2.3 ) Hidden Controls #####
       actionButton("nodeFlag",""),

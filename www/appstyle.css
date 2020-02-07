@@ -40,6 +40,10 @@ nodeModal {
   opacity: .3;
 }
 
+hr {
+  border-top-color: red
+}
+
 .centered {
   text-align: center;
 }
