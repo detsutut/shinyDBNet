@@ -288,7 +288,7 @@ function(input, output, session) {
       trySection = try({
         edges<<-read.csv(file = input$edgesFile$datapath,stringsAsFactors=FALSE)
         nodes<<-getNodes(edges)
-        edges<<-parseEdges(edges)
+        edges<<-parseEdges(edges,nodes)
       })
       if(inherits(trySection, "try-error")) {
         showNotification("Ooops! Something went wrong! Please check the format of your input file.", duration = 15, type = "error")
@@ -549,6 +549,7 @@ function(input, output, session) {
   #' Load a pretrained Bayesian Network, stored on the server.
   #' @return the bayesian network object
   loadPreTrainedBN = function(file = "data/bn_car_insurance"){
+    browser()
     bn_temp = bn
     nodes_temp = nodes
     edges_temp = edges
@@ -558,7 +559,7 @@ function(input, output, session) {
       dag = attr(bn,"dag")
       e = as.data.frame(dag$arcs)
       nodes<<-getNodes(e)
-      edges<<-parseEdges(e)
+      edges<<-parseEdges(e,nodes)
     })
     if(inherits(trySection, "try-error")) {
       showNotification("The network can\'t be loaded. Please check the input again.", duration = 15, type = "error")
