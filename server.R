@@ -5,6 +5,7 @@ function(input, output, session) {
   ##### 2.1 ) On Server Start #####
   #updateCollapse(session,id = "collapseQuery", close = "Network Inference")
   hide("nodeFlag")
+  hide("arcsFlag")
   hide("dblClickFlag")
   hide("clickFlag")
   hide("clickDebug")
@@ -328,7 +329,7 @@ function(input, output, session) {
     }
     if(checked$edges & checked$data) {
       bn<<-createBN(nodes,edges,data)
-      suggested_dag = learnDagFromData(nodes,edges,data)
+      learnDagFromData(nodes,edges,data)
       updateCollapse(session,id = "collapseLoad", close = "Learn The Network")
       shinyjs::runjs("tour.start(true);tour.goTo(6);")
     }
@@ -569,10 +570,20 @@ function(input, output, session) {
   #learnDagFromData
   #Work In progress
   learnDagFromData = function(nodes,edges,data){
-    # browser()
-    # bootstrappedNets = boot.strength(data, R = 5, algorithm = "tabu",algorithm.args = list(whitelist = edges))
-    # dag_learned = averaged.network(bootstrappedNets)
-    # setdiff(dag$arcs,dag_learned$arcs)
+    edges = edges[sample(c(1:nrow(edges)),nrow(edges)-3, replace = FALSE),] #for testing purposes
+    bootstrappedNets = boot.strength(data, R = 5, algorithm = "tabu",algorithm.args = list(whitelist = edges))
+    dag_learned = averaged.network(bootstrappedNets, threshold = 0.001)
+    diff = setdiff(edges,dag_learned$arcs)
+    if(nrow(diff)>0){
+      choices = c()
+      for(i in 1:nrow(diff)){
+        ind_match = which(bootstrappedNets$from == diff[i,1] & bootstrappedNets$to == diff[i,2])
+        strength = bootstrappedNets$strength[ind_match]
+        choices = c(choices,paste0(toupper(as.character(diff[i,1]))," --> ",toupper(as.character(diff[i,2])), " [",strength*100,"%]"))
+      }
+      updateCheckboxGroupInput(session,"arcsCheckboxes", choices = choices)
+      toggleModal(session, 'arcsMenu', toggle = 'toggle')
+    }
   }
   
 }

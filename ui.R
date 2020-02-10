@@ -118,6 +118,7 @@ fluidPage(
       
       ##### 1.2.3 ) Hidden Controls #####
       actionButton("nodeFlag",""),
+      actionButton("arcsFlag",""),
       numericInput("dblClickFlag","",1),
       numericInput("clickFlag","",1),
       numericInput("clickDebug","",1),
@@ -154,6 +155,15 @@ fluidPage(
               "evidenceMenuButton",
               size = "small",
               uiOutput("evidenceControls")),
+      bsModal("arcsMenu", 
+              "Arcs Menu", 
+              "arcsFlag",
+              size = "small",
+              p("Potentially missing relationships between variables emerged from the data. Do you want to include them in the Network?"),
+              p("Check the arcs that you want to keep. Remaining arcs will be ignored."),
+              checkboxGroupInput("arcsCheckboxes", "Arcs Suggestions", choices = NULL, selected = NULL,
+                                 inline = FALSE, width = NULL, choiceNames = NULL,
+                                 choiceValues = NULL)),
       bsModal("cptModal", 
               "CPT Viewer", 
               "viewCPT",
