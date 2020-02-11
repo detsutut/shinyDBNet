@@ -95,7 +95,7 @@ Files have to be in \*.csv format and must follow this templates:
 Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.
 
 <p align="center">
-  <img src="src/arcs.png" alt="arcs suggestion panel" width="40%"/>
+  <img src="src/arcs.png" alt="arcs suggestion panel" width="100%"/>
   <p align ="center"><small>Arcs Suggestion Panel</small></p>
 </p>
 
@@ -131,7 +131,7 @@ The metod used to perform this conditional probability queries it logic sampling
 Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.
 
 <p align="center">
-  <img src="src/cpt.png" alt="Conditional Probability Tables" width="40%"/>
+  <img src="src/cpt.png" alt="Conditional Probability Tables" width="100%"/>
   <p align ="center"><small>Arcs Suggestion Panel</small></p>
 </p>
 
