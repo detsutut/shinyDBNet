@@ -6,6 +6,7 @@ library("shinyjs")
 library("shinydashboard")
 library("ggplot2")
 library("plotly")
+library("dplyr")
 library("shinyBS")
 library("visNetwork")
 library("bnlearn")                                          #bayesian networks handler
@@ -163,7 +164,8 @@ fluidPage(
               p("Check the arcs that you want to keep. Remaining arcs will be ignored."),
               checkboxGroupInput("arcsCheckboxes", "Arcs Suggestions", choices = NULL, selected = NULL,
                                  inline = FALSE, width = NULL, choiceNames = NULL,
-                                 choiceValues = NULL)),
+                                 choiceValues = NULL),
+              actionButton("createWithArcs","createBN")),
       bsModal("cptModal", 
               "CPT Viewer", 
               "viewCPT",

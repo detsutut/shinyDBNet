@@ -335,6 +335,28 @@ function(input, output, session) {
     }
   })
   
+  #' When acrs are checked:
+  # observeEvent(input$arcsCheckboxes,{
+  #   for(arc in input$arcsCheckboxes){
+  #     fromto = strsplit(arc,",")[[1]]
+  #     edges<<-rbind(edges,fromto)
+  #   }
+  #   edges<<-unique(edges)
+  # }) 
+  
+  observeEvent(input$createWithArcs,{
+    tempEdges = edges
+    for(arc in input$arcsCheckboxes){
+      tempEdges = rbind(tempEdges,strsplit(arc,",")[[1]])
+    }
+    tempEdges=unique(tempEdges)
+    bn<<-createBN(nodes,tempEdges,data)
+    edges<<-tempEdges
+    output$network <- renderVisNetwork({visNetworkRenderer()})
+  }) 
+  
+  
+  
   #' When query is uploaded:
   #' retrieve the info 
   #' if we already uploaded file1 and file2, we can now query the network
@@ -430,7 +452,7 @@ function(input, output, session) {
   #' bn = createBN(nodes,edges,data)
   createBN = function(nodes,edges,data){
     bn = try({
-          print("creating bn...")
+          cat("creating bn...")
           showLoading()
           dag= dagtools.new(nodelist = nodes$label) %>%
                dagtools.fill(arcs_matrix = edges)
@@ -443,6 +465,7 @@ function(input, output, session) {
       showNotification("Ooops! Something went wrong! Please check the format of your input files and the consistency of your variables names. Remember also that closed loops are not allowed in Bayesian Networks!", duration = 15, type = "error")
       return(NULL)
     } else {
+      cat("done!\n")
       return(bn)
     }
   }
@@ -570,18 +593,21 @@ function(input, output, session) {
   #learnDagFromData
   #Work In progress
   learnDagFromData = function(nodes,edges,data){
-    edges = edges[sample(c(1:nrow(edges)),nrow(edges)-3, replace = FALSE),] #for testing purposes
+    #edges = edges[sample(c(1:nrow(edges)),nrow(edges)-3, replace = FALSE),] #for testing purposes
     bootstrappedNets = boot.strength(data, R = 5, algorithm = "tabu",algorithm.args = list(whitelist = edges))
     dag_learned = averaged.network(bootstrappedNets, threshold = 0.001)
-    diff = setdiff(edges,dag_learned$arcs)
+    edges_learned = as.data.frame(dag_learned$arcs,stringsAsFactors = FALSE)
+    diff = dplyr::setdiff(edges_learned,edges)
     if(nrow(diff)>0){
-      choices = c()
+      choiceNames = c()
+      choiceValues = list()
       for(i in 1:nrow(diff)){
         ind_match = which(bootstrappedNets$from == diff[i,1] & bootstrappedNets$to == diff[i,2])
         strength = bootstrappedNets$strength[ind_match]
-        choices = c(choices,paste0(toupper(as.character(diff[i,1]))," --> ",toupper(as.character(diff[i,2])), " [",strength*100,"%]"))
+        choiceNames = c(choiceNames,paste0(toupper(as.character(diff[i,1]))," --> ",toupper(as.character(diff[i,2])), " [",strength*100,"%]"))
+        choiceValues[[i]] =paste(diff[i,1],diff[i,2],sep = ",")
       }
-      updateCheckboxGroupInput(session,"arcsCheckboxes", choices = choices)
+      updateCheckboxGroupInput(session,"arcsCheckboxes", choiceNames = choiceNames, choiceValues = choiceValues)
       toggleModal(session, 'arcsMenu', toggle = 'toggle')
     }
   }
