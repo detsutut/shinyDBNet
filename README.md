@@ -19,8 +19,10 @@ This open-source Shiny application provides an **interactive framework for learn
 2) [Example: the Asia dataset](https://github.com/detsutut/shinyDBNet/#example-the-asia-dataset)
 3) [Built With](https://github.com/detsutut/shinyDBNet/#built-with)
 4) [FAQ](https://github.com/detsutut/shinyDBNet/#faq)
-5) [Authors](https://github.com/detsutut/shinyDBNet/#authors)
-6) [License](https://github.com/detsutut/shinyDBNet/#license)
+5) [Future Developments](https://github.com/detsutut/shinyDBNet/#future-developments)
+6) [Authors](https://github.com/detsutut/shinyDBNet/#authors)
+7) [Acknowledgements](https://github.com/detsutut/shinyDBNet/#acknowledgements)
+8) [License](https://github.com/detsutut/shinyDBNet/#license)
 
 ## Getting Started
 
@@ -187,6 +189,8 @@ In all the three queries, being a smoker increases the chances of having the des
 * DAG import from DAGitty
 * Detect cycles in the DAGs and propose possible trimmings to address the problem
 * Data-driven arcs suggestions
+
+See the [changelog](https://github.com/detsutut/shinyDBNet/blob/master/CHANGELOG.md) file to follow the chronological development of the application.
 
 ## Authors
 
