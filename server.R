@@ -329,9 +329,9 @@ function(input, output, session) {
     }
     if(checked$edges & checked$data) {
       bn<<-createBN(nodes,edges,data)
-      learnDagFromData(nodes,edges,data)
+      isDagLearned = learnDagFromData(nodes,edges,data)
       updateCollapse(session,id = "collapseLoad", close = "Learn The Network")
-      shinyjs::runjs("tour.start(true);tour.goTo(6);")
+      if(!isDagLearned) shinyjs::runjs("tour.start(true);tour.goTo(6);")
     }
   })
   
@@ -608,7 +608,8 @@ function(input, output, session) {
       }
       updateCheckboxGroupInput(session,"arcsCheckboxes", choiceNames = choiceNames, choiceValues = choiceValues)
       toggleModal(session, 'arcsMenu', toggle = 'toggle')
-    }
+      return(TRUE)
+    } else {return(FALSE)}
   }
   
 }
