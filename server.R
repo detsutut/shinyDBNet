@@ -345,14 +345,14 @@ function(input, output, session) {
   # }) 
   
   observeEvent(input$createWithArcs,{
-    tempEdges = edges
-    for(arc in input$arcsCheckboxes){
-      tempEdges = rbind(tempEdges,strsplit(arc,",")[[1]])
-    }
-    tempEdges=unique(tempEdges)
-    bn<<-createBN(nodes,tempEdges,data)
-    edges<<-tempEdges
-    output$network <- renderVisNetwork({visNetworkRenderer()})
+      tempEdges = edges
+      for(arc in input$arcsCheckboxes){
+        tempEdges = rbind(tempEdges,strsplit(arc,",")[[1]])
+      }
+      tempEdges=unique(tempEdges)
+      bn<<-createBN(nodes,tempEdges,data)
+      edges<<-tempEdges
+      output$network <- renderVisNetwork({visNetworkRenderer()})
   }) 
   
   
@@ -593,9 +593,8 @@ function(input, output, session) {
   #learnDagFromData
   #Work In progress
   learnDagFromData = function(nodes,edges,data){
-    #edges = edges[sample(c(1:nrow(edges)),nrow(edges)-3, replace = FALSE),] #for testing purposes
     bootstrappedNets = boot.strength(data, R = 5, algorithm = "tabu",algorithm.args = list(whitelist = edges))
-    dag_learned = averaged.network(bootstrappedNets, threshold = 0.001)
+    dag_learned = averaged.network(bootstrappedNets, threshold = 0.19)
     edges_learned = as.data.frame(dag_learned$arcs,stringsAsFactors = FALSE)
     diff = dplyr::setdiff(edges_learned,edges)
     if(nrow(diff)>0){
