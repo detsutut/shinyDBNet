@@ -43,10 +43,12 @@ install.packages(c("shiny",
                   "ggplot2",
                   "plotly",
                   "shinyBS",
+                  "dplyr",
                   "visNetwork",
                   "bnlearn",
                   "gRain",
-                  "pbapply")) 
+                  "pbapply",
+                  "DT")) 
 ```
 You can now run the app simply as follows:
 ```
@@ -88,6 +90,15 @@ Files have to be in \*.csv format and must follow this templates:
   
 **IMPORTANT: the names of the Edges entries and the names of the Data columns must coincide.**
 
+### Data-driven Arcs Suggestions
+
+Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.
+
+<p align="center">
+  <img src="src/arcs.png" alt="arcs suggestion panel" width="40%"/>
+  <p align ="center"><small>Arcs Suggestion Panel</small></p>
+</p>
+
 ### Loading and downloading the Bayesian Network
 
 If you already learnt your DBN, you can also upload it directly into the app using the `upload BN` button from the panel on the top-right side. 
@@ -114,6 +125,15 @@ When you're done with the evidence setting, select the node you want to query an
 </p>
 
 The metod used to perform this conditional probability queries it logic sampling, used to generate random samples conditional on the evidence. More information on logic sampling can be found [here](https://www.bnlearn.com/documentation/man/cpquery.html).
+
+### Conditional Probability Tables
+
+Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.
+
+<p align="center">
+  <img src="src/cpt.png" alt="Conditional Probability Tables" width="40%"/>
+  <p align ="center"><small>Arcs Suggestion Panel</small></p>
+</p>
 
 ## Example: the Asia dataset
 
