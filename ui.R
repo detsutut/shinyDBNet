@@ -55,7 +55,7 @@ fluidPage(
   dashboardPage(
     title="ShinyDBNet",
     ##### 1.1 ) Header #####
-    dashboardHeader(title = p(tags$img(src="adficecol_long_white.png", height ="40px"),tags$sub(tags$i("DBNet"))),titleWidth = 350),
+    dashboardHeader(title = p(tags$img(src="adficecol_long_white.png", height ="41px"),tags$sub(tags$i("DBNet"))),titleWidth = 350),
     
     ##### 1.2 ) Sidebar #####
     dashboardSidebar(
