@@ -1,6 +1,6 @@
 # ShinyDBNet Documentation
 
-This open-source Shiny application provides an **interactive framework for learning, visualizing and reasoning with Discrete Bayesian Networks** (DBNs), a type of probabilistic graphical model that uses Bayesian inference for probability computations.
+Originally developed whithin the UMC's ADFICE_IT project as an educational tool for fall-risk prevention in eldery patients, this open-source Shiny application evolved as a public, generic toolkit providing an **interactive framework for learning, visualizing and reasoning with Discrete Bayesian Networks** (DBNs), a type of probabilistic graphical model that uses Bayesian inference for probability computations.
 
 *This documentation assumes that the reader is already familiar with of Bayesian Networks. If not so, a gentle introduction to the main concepts of Bayesian Networks can be found [here](https://machinelearningmastery.com/introduction-to-bayesian-belief-networks/), along with some further readings.*
 
@@ -219,14 +219,15 @@ See the [changelog](https://github.com/detsutut/shinyDBNet/blob/master/CHANGELOG
 * **Tommaso Buonocore** - *Author and Repository Maintainer* - [GitHub](https://github.com/detsutut), [LinkedIn](https://www.linkedin.com/in/tbuonocore/)
 
 ## Acknowledgements
-We thank [ZonMw](https://www.zonmw.nl/nl/) for funding, along with the [UMC](https://www.amsterdamumc.nl/)'s departments of Geriatrics and Medical Informatics and the ADFICE-IT/CAREFREE teams.
+We thank [ZonMw](https://www.zonmw.nl/nl/) for funding, along with the [UMC](https://www.amsterdamumc.nl/)'s departments of Geriatrics and Medical Informatics and the ADFICE-IT team.
 
-<p align="center">
-  <img src="www/zonmw.png" alt="ZonMw" width="30%"/>
-</p>
-<p align="center">
-  <img src="www/umc.png" alt="ZonMw" width="30%"/>
-</p>
+<table width="100%" border="0" style="border-color: white;">
+  <tr>    
+  <td width="33%"><img src="www/zonmw.png" alt="" align="left"></td>
+  <td width="33%"><img src="www/umc.png" alt="" align="center"></td>
+  <td width="33%"><img src="www/adficecol.png" alt="" align="right"></td>
+  </tr>
+</table>
 
 ## License
 
