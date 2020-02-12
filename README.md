@@ -14,8 +14,10 @@ This open-source Shiny application provides an **interactive framework for learn
 1) [Getting Started](https://github.com/detsutut/shinyDBNet#getting-started)
     * [Running the App](https://github.com/detsutut/shinyDBNet/#running-the-app)
     * [Learning the Bayesian Network](https://github.com/detsutut/shinyDBNet/#learning-the-bayesian-network)
+    * [Data-driven Arcs Suggestions](https://github.com/detsutut/shinyDBNet/#data-driven-arcs-suggestions)
     * [Loading the Bayesian Network](https://github.com/detsutut/shinyDBNet/#loading-and-downloading-the-bayesian-network)
     * [Querying the Network](https://github.com/detsutut/shinyDBNet/#querying-the-network)
+    * [Conditional Probability Table](https://github.com/detsutut/shinyDBNet/#conditional-probability)
 2) [Example: the Asia dataset](https://github.com/detsutut/shinyDBNet/#example-the-asia-dataset)
 3) [Built With](https://github.com/detsutut/shinyDBNet/#built-with)
 4) [FAQ](https://github.com/detsutut/shinyDBNet/#faq)
@@ -92,7 +94,7 @@ Files have to be in \*.csv format and must follow this templates:
 
 ### Data-driven Arcs Suggestions
 
-Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.
+When the BN is created from the data, the app may suggest some additional connections that were absent in the user-defined dag but have emerged from data-driven structure learning. The square brackets show the strength of the proposed arcs, i.e. proportion of times an arc have been discovered among the bootstrapped structures.
 
 <p align="center">
   <img src="src/arcs.png" alt="arcs suggestion panel" width="100%"/>
