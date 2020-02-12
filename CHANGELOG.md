@@ -2,7 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.2] - 2020-02-11
+## [unreleased] - 2020-02-12
+
+### Added
+
+- Nothing relevant has been added
+
+### Changed
+
+- Nothing relevant has been changed
+
+### Removed
+
+- Nothing relevant has been removed
+
+## [1.0.2] - 2020-02-12
 
 ### Added
 
@@ -75,5 +89,6 @@ All notable changes to this project will be documented in this file.
 - Nothing relevant has been removed
 
 [unreleased]: https://github.com/detsutut/shinyDBNet
+[1.0.2]: https://github.com/detsutut/shinyDBNet/tree/116b42e216dae4edb1d147585ad6312147faa714
 [1.0.1]: https://github.com/detsutut/shinyDBNet/tree/9293872ef2285178edfe53c09ba3fc690025cd7d
 [<1.0.1]: https://github.com/detsutut/shinyDBNet/tree/54c273013350dd8886c69e9a6a1e671343880a66
