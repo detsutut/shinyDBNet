@@ -14,6 +14,9 @@ All notable changes to this project will be documented in this file.
 
 - Bug fix: a mismatch of variable names was causing troubles with the edges (i.e. arcs) of the network.
 
+- UI changes:
+  * ADFICE-IT Logo
+
 ### Removed
 
 - Nothing relevant has been removed
