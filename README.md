@@ -103,10 +103,10 @@ When the BN is created from the data, the app may suggest some additional connec
 
 ### Loading and downloading the Bayesian Network
 
-If you already learnt your DBN, you can also upload it directly into the app using the `upload BN` button from the panel on the top-right side. 
-In the same way, the currently displayed DBN can be downloaded as an R object through the `download BN` button.
+If you already learnt your DBN, you can also upload it directly into the app using the `upload` button from the panel on the top-right side. 
+In the same way, the currently displayed DBN can be downloaded as an R object through the `download` button.
 
-If you only want to share the visual representation of your DBN, without allowing any editing, you can use the `HTML` button to download the canvas as an HTML page. Right click and "save image as..." will do the trick if you want a PNG file instead.
+If you only want to share the visual representation of your DBN, without allowing any editing, you can use the `picture` button to download the canvas as an HTML page. Right click and "save image as..." will do the trick if you want a PNG file instead.
 
 <p align="center">
   <img src="src/downloadpanel.png" alt="download/upload panel" width="40%"/>
@@ -130,11 +130,11 @@ The metod used to perform this conditional probability queries it logic sampling
 
 ### Conditional Probability Tables
 
-Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.
+The conditional probability tables of each node of the network can be viewed through the `CPT Viewer` button. Conditional probability tables are read-only at the moment.
 
 <p align="center">
   <img src="src/cpt.png" alt="Conditional Probability Tables" width="100%"/>
-  <p align ="center"><small>Arcs Suggestion Panel</small></p>
+  <p align ="center"><small>CPT Viewer</small></p>
 </p>
 
 ## Example: the Asia dataset
@@ -204,13 +204,12 @@ In all the three queries, being a smoker increases the chances of having the des
 
 ## Future Developments
 
-* Make CPTs manually editable
+* CPTs edit
 * Add support for latent variables
 * Exact inference for relatively simple networks
 * Nodes and arcs interactive add/removal
 * DAG import from DAGitty
 * Detect cycles in the DAGs and propose possible trimmings to address the problem
-* Data-driven arcs suggestions
 
 See the [changelog](https://github.com/detsutut/shinyDBNet/blob/master/CHANGELOG.md) file to follow the chronological development of the application.
 
