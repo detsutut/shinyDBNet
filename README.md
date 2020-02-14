@@ -98,8 +98,11 @@ Files have to be in \*.csv format and must follow this templates:
   | Yes    | No       | Yes  | Yes       | 
   | No     | No       | No   | No        | 
   | No     | Yes      | No   | Yes       | 
-  
-**IMPORTANT: the names of the Edges entries and the names of the Data columns must coincide.**
+
+Important notes about the input files:
+
+- **the entries in the Edges file and the columns in the Data file must have the same names** (see example above)
+- **missing values are not handled correctly**. Please impute/remove the missing values before submitting the data. 
 
 ### Data-driven Arcs Suggestions
 
@@ -159,7 +162,7 @@ Lauritzen and Spiegelhalter (1988) describe it as follows:
   <p align ="center"><small>Directed Acyclig Graph (DAG) representation of Lauritzen and Spiegelhalter problem</small></p>
 </p>
 
-We might then be interested in answer some questions about how these variables interact with eachother, as for instance:
+We might then be interested in answering some questions about how these variables interact with eachother, as for instance:
 * How does knowing that the subject took a `ChestXRay` scan in the last year influences our guessing on `Dyspnoea`?
 * How do the chances of having `Dyspnoea` change if we also know that the patient has neither `Tubercolosis` nor `Lung Cancer`?
 * How does smoking affect the probabilities of having a `Lung Cancer` or `Bronchitis`? Does it affect `Tubercolosis` as well?
@@ -214,10 +217,11 @@ In all the three queries, being a smoker increases the chances of having the des
 ## Future Developments
 
 * CPTs edit
-* Add support for latent variables
-* Exact inference for relatively simple networks
+* Support for latent variables
+* Support for missing values
+* Use exact inference on relatively simple networks
 * Nodes and arcs interactive add/removal
-* DAG import from DAGitty
+* Allow DAG import from DAGitty
 * Detect cycles in the DAGs and propose possible trimmings to address the problem
 
 See the [changelog](https://github.com/detsutut/shinyDBNet/blob/master/CHANGELOG.md) file to follow the chronological development of the application.
