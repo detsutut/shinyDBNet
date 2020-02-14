@@ -30,38 +30,47 @@ Originally developed whithin the UMC's ADFICE_IT project as an educational tool 
 
 ### Running the App
 
-You can run the app from [here](https://detsutut.shinyapps.io/shinyDBNet/) or from your local machine. 
+There are 3 ways to run `shinyDBNet` from your machine:
 
-For the latter approach, you first need to initialize the directory you want to use as the app container with `git init`, then you have to move into that folder and run the following command to clone the repository onto your local machine:
-```
-git clone https://github.com/detsutut/shinyDBNet.git
-```
-This will get you a running copy of the most recent version of `shinyDBNet`.
-In order to run the app, you must first open your R/RStudio console and install all of its dependencies:
-```
-install.packages(c("shiny",
-                  "shinyjs",
-                  "shinydashboard",
-                  "ggplot2",
-                  "plotly",
-                  "shinyBS",
-                  "dplyr",
-                  "visNetwork",
-                  "bnlearn",
-                  "gRain",
-                  "pbapply",
-                  "DT")) 
-```
-You can now run the app simply as follows:
-```
-shiny::runApp("your/path/to/the/app/directory")
-```
-This will start a local instance on your default browser. 
-You can also start the app directly from the github repository running:
-```
-shiny::runGitHub('shinyDBNet', 'detsutut')
-```
-
+1) Remote run from RStudio's `shinyapps.io` server
+    - [Clike here](https://detsutut.shinyapps.io/shinyDBNet/) to run the application
+    - No need to download and install anything. Internet connection is required though.
+    - Limited to 25 hours/month. Please use method 2) and 3) if applicable.
+    
+2) Local run directly from the GitHub repository
+    - R/RStudio is required,
+    - The app dependencies must be installed in your R environment. You can install the packages as follows:
+      ```
+       install.packages(c("shiny",
+                          "shinyjs",
+                          "shinydashboard",
+                          "ggplot2",
+                          "plotly",
+                          "shinyBS",
+                          "dplyr",
+                          "visNetwork",
+                          "bnlearn",
+                          "gRain",
+                          "pbapply",
+                          "DT")) 
+      ```
+    - To run the app directly from the GitHub repository, enter the following command:
+      ```
+       shiny::runGitHub('shinyDBNet', 'detsutut')
+      ```
+  3) Clone the repository and run locally
+      - This approach is recommended for those who wants to modify/extend the app itself or just wants to have a look at the code that powers the app
+      - First, initialize the directory you want to use as the app container with `git init`
+      - Then, move into that folder and run the following command to clone the repository onto your local machine. This will get you a running copy of the most recent version of `shinyDBNet`.
+        ```
+         git clone https://github.com/detsutut/shinyDBNet.git
+        ```
+      - App dependencies nust be installed as illustrated in 2
+      - Now you can run the app typing the following line:
+        ```
+         shiny::runApp("your/path/to/the/app/directory")
+        ```
+    
 ### Learning the Bayesian Network
 
 In order to learn the DBN, two files must be uploaded. These files describes the network in terms of its nodes (i.e. variables), its edges (i.e. relationships between variables) and the data from which to learn the conditional probability tables (i.e. the dataset you're interested in learning from). The conditional probability tables (CPTs) are learnt using posterior Bayesian estimation arising from a flat, non-informative prior \[Nagarajan et al., 2013\].
