@@ -1,6 +1,6 @@
 # ShinyDBNet Documentation
 
-Originally developed whithin the UMC's ADFICE_IT project as an educational tool for fall-risk prevention in eldery patients, this open-source Shiny application evolved as a public, generic toolkit providing an **interactive framework for learning, visualizing and reasoning with Discrete Bayesian Networks** (DBNs), a type of probabilistic graphical model that uses Bayesian inference for probability computations.
+Originally developed whithin the UMC's ADFICE_IT project as an educational tool for fall-risk prevention in eldery patients, this open-source Shiny application evolved as a public, generic toolkit providing an **interactive framework for learning, visualizing and reasoning with Discrete Bayesian Networks** (DBNs). A DBN is a type of probabilistic graphical model that uses Bayesian inference for probability computations.
 
 *This documentation assumes that the reader is already familiar with of Bayesian Networks. If not so, a gentle introduction to the main concepts of Bayesian Networks can be found [here](https://machinelearningmastery.com/introduction-to-bayesian-belief-networks/), along with some further readings.*
 
@@ -59,14 +59,14 @@ There are 3 ways to run `shinyDBNet` from your machine:
        shiny::runGitHub('shinyDBNet', 'detsutut')
       ```
   3) Clone the repository and run locally
-      - This approach is recommended for those who wants to modify/extend the app itself or just wants to have a look at the code that powers the app
-      - First, initialize the directory you want to use as the app container with `git init`
-      - Then, move into that folder and run the following command to clone the repository onto your local machine. This will get you a running copy of the most recent version of `shinyDBNet`.
+      - This approach is recommended for those who want to modify/extend the app itself or just want to have a look at the code that powers the app
+      - First, initialize the directory you want to use as the app container with `git init` (make sure you have Git installed)
+      - Then, move into that directory and run the following command to clone the repository onto your local machine. This will get you a running copy of the most recent version of `shinyDBNet`.
         ```
          git clone https://github.com/detsutut/shinyDBNet.git
         ```
-      - App dependencies nust be installed as illustrated in 2
-      - Now you can run the app typing the following line:
+      - App dependencies must be installed as illustrated in 2. So open R (or R Studio) and make sure the packages are installed as in 2 above, and upload them (using library for each package).
+      - Now you can run the app by typing the following line (note that the path to the app will end with "shinyDBNet", which is the directory that was created in the folder in which you performed the `git clone` command above):
         ```
          shiny::runApp("your/path/to/the/app/directory")
         ```
@@ -106,7 +106,7 @@ Important notes about the input files:
 
 ### Data-driven Arcs Suggestions
 
-When the BN is created from the data, the app may suggest some additional connections that were absent in the user-defined dag but have emerged from data-driven structure learning. The square brackets show the strength of the proposed arcs, i.e. proportion of times an arc have been discovered among the bootstrapped structures.
+When the DBN is created from the data, the app may suggest some additional connections that were absent in the user-defined DAG but have emerged from data-driven structure learning. The square brackets show the strength of the proposed arcs, i.e. proportion of times an arc have been discovered among the bootstrapped structures.
 
 <p align="center">
   <img src="src/arcs.png" alt="arcs suggestion panel" width="100%"/>
@@ -129,7 +129,7 @@ If you don't have a pre-trained DBN to load and no data to learn from, you can p
 
 ### Querying the Network
 
-Click on the nodes to see their prior distributions, where you can also set the evidence for the target node. If multiple evidence has to be set, you may consider using the `Evidence Panel` to manage it quickly.
+Double click on the nodes to see their prior distributions, where you can also set the evidence for the node. If multiple evidence has to be set, you may consider using the `Evidence Panel` to manage evidence setting quickly.
 
 When you're done with the evidence setting, select the node you want to query and use the sidebar panel to perform the query and see how the distribution changes.
 
@@ -138,7 +138,7 @@ When you're done with the evidence setting, select the node you want to query an
   <p align ="center"><small>Query Panel</small></p>
 </p>
 
-The metod used to perform this conditional probability queries it logic sampling, used to generate random samples conditional on the evidence. More information on logic sampling can be found [here](https://www.bnlearn.com/documentation/man/cpquery.html).
+The metod used to perform this conditional probability query is logic sampling, which is used to generate random samples conditional on the evidence. More information on logic sampling can be found [here](https://www.bnlearn.com/documentation/man/cpquery.html).
 
 ### Conditional Probability Tables
 
@@ -169,7 +169,7 @@ We might then be interested in answering some questions about how these variable
 
 In order to anser these questions, we must learn the Discrete Bayesian Network. Thus, the two files mentioned in [Learning the Bayesian Network](https://github.com/detsutut/shinyDBNet/#learning-the-bayesian-network) must be loaded first (you can find them in the data folder).
 
-Once the network is learnt and rendered, we can start inferencing our model to answer the previous questions. Let's first set `ChestXRay = YES` by clicking on the node and checking the radio button.
+Once the network is learnt and rendered, we can use inference using our model to answer the previous questions. Let's first set `ChestXRay = YES` by clicking on the node and checking the radio button.
 
 <p align="center">
   <img src="src/evidence.png" alt="setting the evidence on the ChestXRay node" width="60%"/>
@@ -183,11 +183,11 @@ After setting the evidence on the observed node, we can perform a conditional pr
   <p align ="center"><small>Conditional probability query on Dyspnoea</small></p>
 </p>
 
-As shown in the figure above (A.), we can assess that knowing a patient has gone under a chest X-ray scan increases the probability of having dyspnoea. 
+As shown in the figure above (A.), we can assess that knowing a patient has undergone a chest X-ray scan increases the probability of having dyspnoea. 
 
 Querying other nodes of the network under the same evidence set, we can clearly see that the reason of this increment is due to the association between `ChestXRay`, `LungCancer` and `Tubercolosis`: if a patient undergoes a chest X-ray, chances are that he's doing it because he has `Tubercolosis` or `LungCancer`, which have a direct influence on the `Dyspnoea` value.
 
-Setting a negative evidence on both the `Tubercolosis` and the `LungCancer` nodes (B.) therefore "cancels out" the effect of `ChestXRay` restoring a distribution very close to the prior. Remember that you can use the `Evidence Menu` to set the evidence on multiple nodes quickly.
+Setting a negative evidence on both the `Tubercolosis` and the `LungCancer` nodes (B.) therefore "cancels out" the effect of `ChestXRay` restoring a distribution very close to the prior distribution. Recall that you can use the `Evidence Menu` to set the evidence on multiple nodes quickly.
 
 Let's see how being a smoker influences `Lung Cancer`, `Bronchitis`, and `Tubercolosis`.
 
@@ -231,7 +231,8 @@ See the [changelog](https://github.com/detsutut/shinyDBNet/blob/master/CHANGELOG
 * **Tommaso Buonocore** - *Author and Repository Maintainer* - [GitHub](https://github.com/detsutut), [LinkedIn](https://www.linkedin.com/in/tbuonocore/)
 
 ## Acknowledgements
-We thank [ZonMw](https://www.zonmw.nl/nl/) for funding, along with the [UMC](https://www.amsterdamumc.nl/)'s departments of Geriatrics and Medical Informatics and the ADFICE-IT team.
+
+We thank [ZonMw](https://www.zonmw.nl/nl/) for funding this project as part of the ADFICE-IT research project. The work has been supervised by Prof. [Ameen Abu-Hanna](https://kik.amc.nl/home/aabuhanna/) and Prof. Nathalie van der Velde from, respectively, the departments of Medical Informatics and Geriatrics of the Amsterdam [UMC](https://www.amsterdamumc.nl/), location AMC. Thanks are also due to the whole ADFICE-IT team.
 
 <table width="100%" border="0" style="border-color: white;">
   <tr>    
