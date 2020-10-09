@@ -1,5 +1,5 @@
 ############## 0 ) INIT ##############
-version = "1.0.2"
+version = "1.0.3"
 
 library("shiny")
 library("shinyjs")
@@ -68,7 +68,11 @@ fluidPage(
                                  div(id="fileInput3",fileInput(inputId =  "dataFile", "Load data",width = "95%", multiple = FALSE)),
                                  actionButton(inputId = "preTrained", 
                                               class = "debugElement",
-                                              label = "Load Example", 
+                                              label = "Load Car Insurance Example", 
+                                              width = "86%"),
+                                 actionButton(inputId = "preTrainedFalls", 
+                                              class = "debugElement",
+                                              label = "Load Pretrained Falls Network", 
                                               width = "86%")
                  )
       ),

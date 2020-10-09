@@ -279,6 +279,19 @@ function(input, output, session) {
     shinyjs::runjs("tour.start(true);tour.goTo(6);")
   })
   
+  #' When preTrainedFalls is clicked:
+  #' load and render a pretrained bayesian network for Falls
+  #' @seealso \code{\link{loadPreTrainedBN}}
+  observeEvent(input$preTrainedFalls,{
+    showLoading()
+    bn <<- loadPreTrainedBN("data/bnFallsFull")
+    updateSelectInput(session,"nodeToQuery",choices = nodes$label)
+    output$network <- renderVisNetwork({visNetworkRenderer()})
+    updateCollapse(session,id = "collapseLoad", close = "Learn The Network")
+    hideLoading()
+    shinyjs::runjs("tour.start(true);tour.goTo(6);")
+  })
+  
   #' When file2 is uploaded:
   #' read the csv, store the edges info and update the sidebar's query menu
   #' if we already uploaded file1, we can render the network
