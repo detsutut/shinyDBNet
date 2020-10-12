@@ -16,51 +16,6 @@ bntools.fit = function(dag, data,method=c("bayes"),priorWeight = 1, verbose = FA
   return(bn)
 }
 
-#' Query a target node given some evidence on other nodes, comparing the probability distribution of the target node before and after conditioning on the given evidence.
-#' 
-#' @param bn the fully-specified bayesian network to query
-#' @param target target node of the query
-#' @param evidenceNodes nodes where the evidence is set
-#' @param evidenceStates values of the evidence
-#' @return table with the results of the query
-#' @examples bntools.query(bn,target = "A", evidenceNodes = c("B","C"), evidenceStates = c("b1","c2"))
-bntools.query = function(bn, target = NULL, evidenceNodes = c(), evidenceStates = c()){
-  junction_tree = compile(as.grain(bn))
-  if(is.null(target)) target = select.list(nodes(bn), preselect = NULL,  multiple = FALSE,  title = "Query target node:", graphics = TRUE)
-  if(length(evidenceNodes)==0){
-    selected = select.list(setdiff(nodes(bn), target), 
-                           preselect = NULL, 
-                           multiple = TRUE,
-                           title = "Set evidence on:",
-                           graphics = TRUE)
-    for(node in selected){
-      evidenceNodes = c(evidenceNodes,node)
-      levels = dimnames(bn[[node]]$prob)[[node]]
-      if(is.null(levels)) levels = dimnames(bn[[node]]$prob)[[1]]
-      state = select.list(levels, 
-                          preselect = NULL, 
-                          multiple = FALSE,
-                          title = paste(toupper(node),"observed:"),
-                          graphics = TRUE)
-      evidenceStates = c(evidenceStates,state)
-    }
-  }
-  junction_tree_evidence = setEvidence(junction_tree, nodes=evidenceNodes, states = evidenceStates)
-  queries = cbind(querygrain(junction_tree,nodes = target)[[target]], 
-                  querygrain(junction_tree_evidence,nodes = target)[[target]])
-  colnames(queries) = c(paste("P(",toupper(target),")",collapse = ""),paste("P(",toupper(target),"| Evidence* )",collapse = ""))
-  barplot(queries, 
-          main=paste(toupper(target),"distributions"),
-          sub = paste("*Evidence :",paste(evidenceNodes,"=",evidenceStates,collapse = ", ")),
-          ylab="Probability",
-          legend = rownames(queries),
-          col = rainbow(n = length(rownames(queries)), s = 0.5),
-          args.legend = list(x = "bottomright", cex=0.8, title = toupper(target)),
-          beside=TRUE, horiz=FALSE)
-  tryCatch(shinyjs::hideElement(id = 'loading3'),error = function(e) print(e))
-  # return(queries)
-}
-
 #' Check if two nodes are d-separated given some evidence on other nodes. If no evidence is given, a greedy search will look for all the possible combination of nodes that, 
 #' when given, d-separate the source node and the target node. On complex network where the greedy search would be computationally expensive, the user may set the maximum subset
 #' size to explore. If the maximum subset size is negative, the algorithm will stop when the minimum subset of d-separating features is detected.
@@ -102,7 +57,7 @@ bntools.dsep = function(bn, source=NULL, target=NULL, given = NULL, maxSize = NU
     } 
     allCombos = allCombos[which(lapply(allCombos,nrow)<=maxSize)]
     for (comboList in allCombos) {
-      results = pbapply(comboList, 2, function(z) {
+      results = apply(comboList, 2, function(z) {
         dsep(dag,
              x = source,
              y = target,
@@ -265,7 +220,7 @@ dagtools.dsep = function(dag, source=NULL, target=NULL, given = NULL, maxSize = 
     } 
     allCombos = allCombos[which(lapply(allCombos,nrow)<=maxSize)]
     for (comboList in allCombos) {
-      results = pbapply(comboList, 2, function(z) {
+      results = apply(comboList, 2, function(z) {
         dsep(dag,
              x = source,
              y = target,
@@ -299,7 +254,7 @@ dagtools.findIc = function(dag, given = NULL) {
   nodesToCheck = setdiff(nodes(dag), given)
   combos = combn(x = nodesToCheck, 2)
   positiveCombos = list()
-  results = pbapply(combos,2,function(x){
+  results = apply(combos,2,function(x){
     dsep(dag,x=x[1],y=x[2],z=given)
   })
   if(length(which(results==TRUE))==0) return(NULL)

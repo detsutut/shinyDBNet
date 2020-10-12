@@ -1,20 +1,18 @@
 ############## 0 ) INIT ##############
 version = "1.0.3"
 
-library("shiny")
-library("shinyjs")
-library("shinydashboard")
+library("shiny")                                  #Main package for web app development
+library("shinyjs")                                #Adds JavaScript support
+library("shinydashboard")                         #Adds dashboards support
+library("shinyBS")                                #Adds Bootstrap support
 library("ggplot2")
 library("plotly")
 library("dplyr")
-library("shinyBS")
-library("visNetwork")
-library("bnlearn")                                          #bayesian networks handler
-library("gRain")                                            #bayesian networks visualizer
-library("pbapply")                                          #adds progress bars to the apply family
-library("DT")
+library("visNetwork")                             #Tools for nteworks visualization
+library("bnlearn")                                #Bayesian networks handler
+library("DT")                                     #Provides a visual interface for data tables                                    
 
-source("scripts/utilities.R")                               #load utilities
+source("scripts/utilities.R")                     #Loads utilities
 
 ##### 0.1 ) Input list #####
 
@@ -64,30 +62,34 @@ fluidPage(
       ##### 1.2.1 ) File Loading #####
       bsCollapse(id = "collapseLoad", open = "Learn The Network",
                  bsCollapsePanel("Learn The Network",
-                                 div(id="fileInput2",fileInput(inputId =  "edgesFile", "Load edges",width = "95%", multiple = FALSE)),
-                                 div(id="fileInput3",fileInput(inputId =  "dataFile", "Load data",width = "95%", multiple = FALSE)),
-                                 actionButton(inputId = "preTrained", 
-                                              class = "debugElement",
-                                              label = "Load Car Insurance Example", 
-                                              width = "86%"),
-                                 actionButton(inputId = "preTrainedFalls", 
-                                              class = "debugElement",
-                                              label = "Load Pretrained Falls Network", 
-                                              width = "86%")
+                                 div(id="fileInput2",fileInput(inputId =  "edgesFile", "Load edges",width = "95%", multiple = FALSE),style="color:#b3bec2"),
+                                 div(id="fileInput3",fileInput(inputId =  "dataFile", "Load data",width = "95%", multiple = FALSE),style="color:#b3bec2"),
+                                 div(class="row",  style="margin-left: 0px; margin-right:35px",
+                                     h5("Preloaded Examples",style="text-align:center; color:#b3bec2"),
+                                     div(class="col-xs-6", style="padding-left: 0px; padding-right:0px",
+                                         actionButton(inputId = "preTrained", 
+                                                      class = "debugElement",
+                                                      label = "Car Insurance", 
+                                                      width = "93%")),
+                                     div(class="col-xs-6", style="padding-left: 0px; padding-right:0px",
+                                         actionButton(inputId = "preTrainedFalls", 
+                                                      class = "debugElement",
+                                                      label = "Falls Network",
+                                                      width = "93%")))
                  )
       ),
       hr(style="border-top-color:rgba(0,0,0,.1"),
       ##### 1.2.2 ) Query #####
       bsCollapse(id = "collapseQuery", open = "Network Inference",
                  bsCollapsePanel("Network Inference",
-                                 div(id="querySection",
+                                 div(id="querySection", style="color:#b3bec2",
                                      selectInput(inputId = "nodeToQuery", 
                                                  label = "Selected node", 
                                                  choices = c(""),
                                                  selected = NULL, 
                                                  multiple = FALSE,
                                                  selectize = TRUE, 
-                                                 width ="95%", 
+                                                 width ="95%",
                                                  size = NULL),
                                      actionButton(inputId = "query", 
                                                   label = "Query", 

@@ -19,6 +19,7 @@ function(input, output, session) {
   bn = NULL
   debug = FALSE
   debugCounter = 0
+  queryRepeat = 19
   evidenceMenuUiInjected = FALSE
   shinyjs::runjs(
     "if(getCookie('BN_tutorial') != 'true'){
@@ -396,7 +397,7 @@ function(input, output, session) {
       queryData = eval(parse(text = paste("table(cpdist(bn, ", queryNodeString, ", ",  #merge together and run the query
                                                queryEvidenceString, "))", sep = ""))) 
       #for loop to get more stable results
-      for (i in 1:4){
+      for (i in 1:queryRepeat){
         queryData = rbind(queryData,eval(parse(text = paste("table(cpdist(bn, ", queryNodeString, ", ",  #merge together and run the query
                                            queryEvidenceString, "))", sep = ""))))
       }
