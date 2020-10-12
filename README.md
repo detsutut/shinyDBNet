@@ -125,7 +125,7 @@ If you only want to share the visual representation of your DBN, without allowin
   <p align ="center"><small>Download/Upload Panel</small></p>
 </p>
 
-If you don't have a pre-trained DBN to load and no data to learn from, you can play with a **pre-trained example** by clicking the `Load Example` button. This will upload a network for evaluating car insurance risks, which is detailedly described [here](https://www.bnlearn.com/documentation/man/insurance.html).
+If you don't have a pre-trained DBN to load and no data to learn from, you can play with a **pre-trained example** by clicking `Car Insurance` or `Falls Network` in the `Preloaded Examples` section. This will upload a network for evaluating car insurance risks (detailedly described [here](https://www.bnlearn.com/documentation/man/insurance.html)), or the Bayesian Network model implemented by UMC's Geriatrics department for Falls risk evaluation in elderly patients.
 
 ### Querying the Network
 
