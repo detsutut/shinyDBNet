@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+
+## [Unreleased] - 2020-10-12
+ 
+### Added
+
+- Nothing relevant has been added yet
+ 
+### Changed
+
+- Nothing relevant has been changed yet
+ 
+### Removed
+
+- Nothing relevant has been removed yet
+
+
 ## [1.0.3] - 2020-10-12
 
 ### Added
