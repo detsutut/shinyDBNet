@@ -2,19 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased] - 2020-02-12
+## [1.0.3] - 2020-10-12
 
 ### Added
 
-- Nothing relevant has been added
+- UMC's Falls Network Model as one of the preloaded examples
 
 ### Changed
 
-- Nothing relevant has been changed
+- UI changes: new button for Falls Network
+- Increased number of iterations on queries to provide more stable results
 
 ### Removed
 
-- Nothing relevant has been removed
+- Unused query function in the utilities script
+- Removed all the gRain dependencies due to insurmountable conflicts when deploying
 
 ## [1.0.2] - 2020-02-12
 
